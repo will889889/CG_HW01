@@ -87,6 +87,7 @@ GLint fTime;
 float fakeTime = 1.0f;
 float timeSpeed = 1.0f;		//	0 ~ 1
 float armRotateAngle = 0.0f;
+mat4 bodyRotateMatrix;
 
 int vertices_size[PARTSNUM];
 int uvs_size[PARTSNUM];

@@ -111,14 +111,16 @@ void resetObj(){
 
 float armTime = 0;
 float armTimeScale = 10.0f;
+float bodyTime = 0;
+float bodyTimeScale = 4.0f;
 void updateObj(float deltaTime){
 	//	Arm rotation
 	armTime += deltaTime;
-	armRotateAngle = (90.0f * sin(armTime * armTimeScale)) + 90.0f;
+	armRotateAngle = (90.0f * sin(armTime * armTimeScale)) + 90.0f;	//	between 0 ~ 180
 
 	//	Body deform matrix
-
-
+	bodyTime += deltaTime;
+	bodyRotateMatrix = rotate(25.0f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
 }
 
 
@@ -407,7 +409,7 @@ void updateModels(){
 	beta = angle;
 	Rotatation[0] = rotate(0,1,0,0);
 	Translation[0] = translate(0, positionY,0);
-	Models[0] = Translation[0]*Rotatation[0]*scale(1.0f, 1.0f, 1.0f);
+	Models[0] = Translation[0]*Rotatation[0]* bodyRotateMatrix * scale(1.0f, 1.0f, 1.0f);
 
 	//	armRotateAngle [0 ~ 180]
 	//	1 - Arm_L
@@ -538,12 +540,12 @@ void Keyboard(unsigned char key, int x, int y){
 			instanceAmount = 0;
 		break;
 	case '3':
-		armTimeScale += 0.1f;
-		cout << "armTimeScale = " + std::to_string(armTimeScale) << "\n";
+		bodyTimeScale += 0.1f;
+		cout << "bodyTimeScale = " + std::to_string(bodyTimeScale) << "\n";
 
 		break;
 	case '4':
-		armTimeScale -= 0.1f;
+		bodyTimeScale -= 0.1f;
 
 		break;
 	case 'w':
