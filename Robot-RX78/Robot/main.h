@@ -17,7 +17,7 @@ using namespace glm;
 
 
 
-#define PARTSNUM 3
+#define PARTSNUM 4
 ///#define PARTSNUM 18
 #define BODY 0
 #define LEFTSHOUDER 1
