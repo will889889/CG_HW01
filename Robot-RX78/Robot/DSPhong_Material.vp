@@ -68,7 +68,7 @@ void main(void)
 	}
 
     // Get vertex position in eye coordinates
-    vec4 vPosition4 = MV * vec4(vPosition, 1);
+    vec4 vPosition4 = MV * vec4(vPosDeformed.xyz / vPosDeformed.w,1);
 	vec3 vPosition3 = vPosition4.xyz / vPosition4.w;
 
     // Get vector to light source
@@ -78,5 +78,5 @@ void main(void)
 
     // Don't forget to transform the geometry!
 
-    gl_Position = (MVP * (vec4(vPosition,1) + vec4(instanceOffset.x * yTime, 200.0f * sin(yTime), instanceOffset.z * yTime, 0)));
+    gl_Position = (MVP * (vec4(vPosDeformed.xyz / vPosDeformed.w,1) + vec4(instanceOffset.x * yTime, 200.0f * sin(yTime), instanceOffset.z * yTime, 0)));
 }
