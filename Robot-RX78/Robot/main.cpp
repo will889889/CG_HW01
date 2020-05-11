@@ -61,16 +61,38 @@ int main(int argc, char** argv){
 	glutMainLoop();
 	return 0;
 }
+
+float screenW = 0, screenH = 0;
 void ChangeSize(int w,int h){
 	if(h == 0) h = 1;
 	glViewport(0,0,w,h);
+	screenW = w;
+	screenH = h;
 	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
 }
 void My_Mouse_Moving(int x, int y) {
-	cout << "x: " << x << ", y: " << y << "\n";
+	x = x - screenW / 2.0f;
+	y = y - screenH / 2.0f;
+	float distance = sqrtf(x*x + y * y);
+
+
+	timeSpeed = 1.0f - (distance) / 500.0f;
+	if (timeSpeed < 0)
+		timeSpeed = 0;
+
+	/*if (distance < 100)
+		timeSpeed = 1.0f;
+	else if (distance >= 300)
+		timeSpeed = 0;
+	else
+		timeSpeed = 1.0f - (distance - 100.0f) / 200.0f;*/
+	//cout << "x: " << (x) << ", y: " << y << "\n";
+	//cout << "L = " << distance << "\n";
+	//cout << "screenW: " << screenW << ", screenH: " << screenH << "\n";
+	
 }
 
 //	update	(called per 33ms)
@@ -116,12 +138,12 @@ void resetObj(){
 #define DOR(angle) (angle*3.1415/180);
 
 float armTime = 0;
-float armTimeScale = 10.0f;
+float armTimeScale = 30.0f;
 float bodyTime = 0;
-float bodyTimeScale = 5.0f;
+float bodyTimeScale = 15.0f;
 void updateObj(float deltaTime){
 	//	Arm rotation
-	//armTime += deltaTime;
+	armTime += deltaTime;
 	armRotateAngle = (90.0f * sin(armTime * armTimeScale)) + 90.0f;	//	between 0 ~ 180
 
 	//	Body deform matrix
