@@ -84,6 +84,7 @@ GLfloat movex,movey;
 GLint MatricesIdx;
 GLuint ModelID;
 GLuint DeformRotationID;
+GLuint IsBodyID;
 ///	time
 GLint fTime;
 float fakeTime = 1.0f;

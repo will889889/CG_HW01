@@ -118,15 +118,15 @@ void resetObj(){
 float armTime = 0;
 float armTimeScale = 10.0f;
 float bodyTime = 0;
-float bodyTimeScale = 4.0f;
+float bodyTimeScale = 5.0f;
 void updateObj(float deltaTime){
 	//	Arm rotation
-	armTime += deltaTime;
+	//armTime += deltaTime;
 	armRotateAngle = (90.0f * sin(armTime * armTimeScale)) + 90.0f;	//	between 0 ~ 180
 
 	//	Body deform matrix
 	bodyTime += deltaTime;
-	bodyRotateMatrix = rotate(25.0f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
+	bodyRotateMatrix = rotate(1.0f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
 }
 
 
@@ -159,6 +159,7 @@ void init(){
 	MatricesIdx = glGetUniformBlockIndex(program,"MatVP");
 	ModelID =  glGetUniformLocation(program,"Model");
 	DeformRotationID = glGetUniformLocation(program, "DeformRotation");
+	IsBodyID = glGetUniformLocation(program, "isBody");
     M_KaID = glGetUniformLocation(program,"Material.Ka");
 	M_KdID = glGetUniformLocation(program,"Material.Kd");
 	M_KsID = glGetUniformLocation(program,"Material.Ks");
@@ -249,7 +250,7 @@ void display(){
 	GLuint offset[3] = {0,0,0};//offset for vertices , uvs , normals
 	for(int i = 0;i < PARTSNUM ;i++){
 		glUniformMatrix4fv(ModelID,1,GL_FALSE,&Models[i][0][0]);
-
+		glUniform1i(IsBodyID, i);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -414,23 +415,24 @@ void updateModels(){
 	}
 	float r,pitch,yaw,roll;
 	float alpha, beta ,gamma;
+	DeformRotation = bodyRotateMatrix;
 
 	//	0
 	beta = angle;
 	Rotatation[0] = rotate(0,1,0,0);
 	Translation[0] = translate(0, positionY,0);
-	Models[0] = Translation[0]*Rotatation[0]* bodyRotateMatrix * scale(1.0f, 1.0f, 1.0f);
+	Models[0] = Translation[0]*Rotatation[0]* scale(1.0f, 1.0f, 1.0f);
 
 	//	armRotateAngle [0 ~ 180]
 	//	1 - Arm_L
 	Rotatation[1] = rotate(-armRotateAngle, 1, 0, 0);
 	Translation[1] = translate(0, 25.3f, 0);
-	Models[1] = Translation[1] * Rotatation[1];
+	Models[1] = Translation[1] * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
 
 	//	2 - Arm_R
 	Rotatation[2] = rotate(armRotateAngle - 180.0f, 1, 0, 0);
 	Translation[2] = translate(0, 25.3f, 0);
-	Models[2] = Translation[2] * Rotatation[2];
+	Models[2] = Translation[2] * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
 
 	return;
 
