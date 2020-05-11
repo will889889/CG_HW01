@@ -24,7 +24,7 @@ uniform float fTime;
 uniform int isBody = 0;
 uniform mat4 DeformRotation;
 float startHeight = 10.0f;
-float endHeight = 38.0f;
+float endHeight = 80.0f;
 float interval = 1.0f;
 
 // Color to fragment program

@@ -463,8 +463,8 @@ void updateModels(){
 			dRotation = DeformRotation * dRotation;
 		}
 	}
-	mat4 fixedOffset = translate(18, 0, 0);
-	mat4 negfixedOffset = translate(-18, 0, 0);
+	mat4 fixedOffset = translate(16, 0, 0);
+	mat4 negfixedOffset = translate(-16, 0, 0);
 	Models[1] = Translation[1] * negfixedOffset * dRotation * fixedOffset * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
 
 	//	2 - Arm_R
