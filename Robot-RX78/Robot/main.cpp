@@ -61,7 +61,7 @@ int main(int argc, char** argv){
 void ChangeSize(int w,int h){
 	if(h == 0) h = 1;
 	glViewport(0,0,w,h);
-	Projection = perspective(80.0f,(float)w/h,0.1f,100.0f);
+	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
@@ -116,35 +116,6 @@ void updateObj(int frame){
 		
 		break;
 	case 1:
-	case 2:
-	case 3:
-		/*angles[1] +=10;
-		angles[12] -=15;*/
-		position += 0.1;
-		break;
-	case 4:
-	case 5:
-	case 6:
-		/*angles[1] -=10;
-		angles[12] +=15;
-		angles[13] -= 15;*/
-		position -= 0.1;
-		break;
-	case 7:
-	case 8:
-	case 9:
-		/*angles[1] -=10;
-		angles[12] +=15;
-		angles[13] = 0;*/
-		position += 0.1;
-		break;
-	case 10:
-	case 11:
-	case 12:
-		/*angles[1] +=10;
-		angles[12] -=15;
-		angles[13] += 15;*/
-		position -= 0.1;
 		break;
 	}
 }
@@ -183,7 +154,7 @@ void init(){
 	M_KdID = M_KaID+1;
 	M_KsID = M_KaID+2;
 
-	Projection = glm::perspective(80.0f,4.0f/3.0f,0.1f,100.0f);
+	Projection = glm::perspective(80.0f,4.0f/3.0f,0.1f,1000.0f);
 	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 	
 	// Camera matrix
@@ -248,7 +219,7 @@ void display(){
 	glUseProgram(program);//uniform參數數值前必須先use shader
 	float eyey = DOR(eyeAngley);
 	View       = lookAt(
-		               vec3(eyedistance*sin(eyey),0,eyedistance*cos(eyey)) , // Camera is at (0,0,20), in World Space
+		               vec3(eyedistance*sin(eyey), 0,eyedistance*cos(eyey)) , // Camera is at (0,0,20), in World Space
 		               vec3(0,0,0), // and looks at the origin
 		               vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 		                );
@@ -451,8 +422,8 @@ void updateModels(){
 	//	0
 	beta = angle;
 	Rotatation[0] = rotate(0,1,0,0);
-	Translation[0] = translate(0,-10.0f + position,0);
-	Models[0] = Translation[0]*Rotatation[0]*scale(0.1f, 0.1f, 0.1f);
+	Translation[0] = translate(0, positionY,0);
+	Models[0] = Translation[0]*Rotatation[0]*scale(1.0f, 1.0f, 1.0f);
 
 	///	only [0]
 	return;
@@ -476,7 +447,7 @@ void updateModels(){
 	//Body
 	beta = angle;
 	Rotatation[0] = rotate(beta, 0, 1, 0);
-	Translation[0] = translate(0, 2.9 + position, 0);
+	Translation[0] = translate(0, 2.9 + 0, 0);
 	Models[0] = Translation[0] * Rotatation[0];
 	//左手=======================================================
 	//左上手臂
@@ -516,84 +487,6 @@ void updateModels(){
 	//延x軸位移以上手臂為半徑的圓周長:translate(0,r*cos,r*sin) ,角度為上手臂+下手臂
 	Translation[3] = translate(0,-4.8,0);
 	Models[3] = Models[2]*Translation[3]*Rotatation[3];
-	//============================================================
-	//頭==========================================================
-	Translation[5] = translate(0,3.9,-0.5);
-	Models[5] = Models[0]*Translation[5]*Rotatation[5];
-	//============================================================
-	//右手=========================================================
-	gamma = -10;alpha = angles[6] = -angles[1];
-	Rotatation[6] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);
-	Translation[6] = translate(-3.9,1.7,-0.2);
-	Models[6] = Models[0]*Translation[6]*Rotatation[6];
-
-	Rotatation[9] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);
-	Translation[9] = translate(-3.9,1.1,-0.2);
-	Models[9] = Models[0]*Translation[9]*Rotatation[9];
-
-	angles[7] = angles[2];
-	pitch = DOR(alpha);r = -3;
-	roll = DOR(gamma);
-	alpha = angles[7]-20;
-	Rotatation[7] = rotate(alpha,1,0,0);
-	Translation[7] = translate(0,-3,0);
-	Models[7] = Models[6]*Translation[7]*Rotatation[7];
-
-	pitch = DOR(alpha);
-	//b = DOR(angles[7]);
-	roll = DOR(gamma);
-	Translation[8] =translate(0,-6,0);
-	Models[8] = Models[7]*Translation[8]*Rotatation[8];
-	//=============================================================
-	//back&DBody===================================================
-	Translation[10] =translate(0,2,-4.5);
-	Models[10] = Models[0]*Translation[10]*Rotatation[10];
-
-	Translation[11] =translate(0,-5.3,0);
-	Models[11] = Models[0]*Translation[11]*Rotatation[11];
-	//=============================================================
-	//左腳
-	alpha = angles[12];gamma = 10;
-	Rotatation[12] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);
-	Translation[12] =translate(1.8,-4.5,0);
-	Models[12] = Translation[12]*Rotatation[12]*Models[12];
-
-	pitch = DOR(alpha);r = -7;
-	roll = DOR(gamma);
-	alpha = angles[13]+angles[12];
-	Translation[13] = translate(-r*sin(roll),r*cos(pitch),r*sin(pitch))*Translation[12];
-	Rotatation[13] = rotate(alpha,1,0,0);
-	Models[13] = Translation[13]*Rotatation[13]*Models[13];
-
-	pitch = DOR(alpha); r = -5;
-	//b = DOR(angles[13]);
-	roll = DOR(gamma);
-	Translation[14] = translate(-(r+2)*sin(roll),r*cos(pitch),r*sin(pitch)-1)*Translation[13];
-	Rotatation[14] = rotate(alpha,1,0,0);
-	Models[14] = Translation[14]*Rotatation[14]*Models[14];
-	//=============================================================
-	//右腳
-	alpha = angles[15] = -angles[12];
-	gamma = -10;
-	Rotatation[15] = rotate(alpha ,1,0,0)*rotate(gamma ,0,0,1);
-	Translation[15] =translate(-1.8,-4.5,0);
-	Models[15] = Translation[15]*Rotatation[15]*Models[15];
-
-	angles[16] = angles[13];
-	pitch = DOR(alpha);r = -7;
-	roll = DOR(gamma);
-	alpha = angles[16]+angles[15];
-	Rotatation[16] = rotate(alpha,1,0,0);
-	Translation[16] = translate(-r*sin(roll),r*cos(pitch),r*sin(pitch))*Translation[15];
-	Models[16] = Translation[16]*Rotatation[16]*Models[16];
-
-	pitch = DOR(alpha); r = -5;
-	//b = DOR(angles[16]);
-	roll = DOR(gamma);
-	alpha = angles[15]+angles[16];
-	Translation[17] = translate(-(r+2)*sin(roll),r*cos(pitch),r*sin(pitch)-0.5)*Translation[16];
-	Rotatation[17] = rotate(alpha,1,0,0);
-	Models[17] = Translation[17]*Rotatation[17]*Models[17];
 	//=============================================================
 }
 
@@ -673,10 +566,11 @@ void Keyboard(unsigned char key, int x, int y){
 
 		break;
 	case 'w':
-		eyedistance -= 0.2;
+		eyedistance -= 1;
 		break;
 	case 's':
-		eyedistance += 0.2;
+		eyedistance += 1;
+		cout << "eyedistance = " + std::to_string(eyedistance);
 		break;
 	case 'a':
 		eyeAngley -=10;
@@ -693,8 +587,13 @@ void Keyboard(unsigned char key, int x, int y){
 		movex = 0;
 		break;
 	case 'q':
+		positionY += 1.0f;
 		break;
 	case 'e':
+		positionY -= 1.0f;
+		cout << "positionY = " + std::to_string(positionY);
+
+
 		break;
 	}
 	glutPostRedisplay();
