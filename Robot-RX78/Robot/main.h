@@ -82,6 +82,7 @@ float size = 1;
 GLfloat movex,movey;
 GLint MatricesIdx;
 GLuint ModelID;
+GLuint DeformRotationID;
 ///	time
 GLint fTime;
 float fakeTime = 1.0f;
@@ -100,6 +101,7 @@ mat4 Projection ;
 mat4 View;
 mat4 Model;
 mat4 Models[PARTSNUM];
+mat4 DeformRotation;
 
 #define leftHand 0
 #define rightHand 1

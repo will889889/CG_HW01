@@ -145,10 +145,13 @@ void init(){
 	
 	MatricesIdx = glGetUniformBlockIndex(program,"MatVP");
 	ModelID =  glGetUniformLocation(program,"Model");
+	DeformRotationID = glGetUniformLocation(program, "DeformRotation");
     M_KaID = glGetUniformLocation(program,"Material.Ka");
 	M_KdID = glGetUniformLocation(program,"Material.Kd");
 	M_KsID = glGetUniformLocation(program,"Material.Ks");
 	fTime = glGetUniformLocation(program, "fTime");
+
+	DeformRotation = rotate(1, 0, 0, 1);
 
 	//or
 	M_KdID = M_KaID+1;
@@ -230,6 +233,7 @@ void display(){
 	glBufferSubData(GL_UNIFORM_BUFFER,sizeof(mat4),sizeof(mat4),&Projection);
 	glBindBuffer(GL_UNIFORM_BUFFER,0);
 
+	glUniformMatrix4fv(DeformRotationID, 1, GL_FALSE, &DeformRotation[0][0]);
 	GLuint offset[3] = {0,0,0};//offset for vertices , uvs , normals
 	for(int i = 0;i < PARTSNUM ;i++){
 		glUniformMatrix4fv(ModelID,1,GL_FALSE,&Models[i][0][0]);

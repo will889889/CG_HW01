@@ -23,7 +23,7 @@ uniform float fTime;
 // Wills
 uniform mat4 DeformRotation;
 float startHeight = 10.0f;
-float endHeight = 29.0f;
+float endHeight = 38.0f;
 float interval = 1.0f;
 
 // Color to fragment program
@@ -41,9 +41,33 @@ void main(void)
     vVaryingNormal = normalMatrix * vertexNormal;
 
 	// Will - deform model
+	vec4 vPosDeformed = vec4(vPosition,1);
+	if(vPosition.y > startHeight)
+	{
+		int level = int(ceil(vPosition.y - startHeight));
+		if(vPosition.y >= endHeight)
+		{
+			level = int(ceil(endHeight));
+		}
+		vec4 deformPos = vec4(0,interval,0,1);
+		for(int i = 1; i < level; i++)
+		{
+			deformPos = DeformRotation * deformPos;
+			deformPos += vec4(0, interval, 0, 0);
+		}
+		deformPos += vec4(0, startHeight, 0, 0);
+
+		vPosDeformed = vPosDeformed - vec4(0, interval * level - 1 + startHeight, 0, 1);
+
+		for(int i = 0; i < level; i++)
+		{
+			vPosDeformed = DeformRotation * vPosDeformed;
+		}
+		vPosDeformed = deformPos + vPosDeformed;
+	}
 
     // Get vertex position in eye coordinates
-    vec4 vPosition4 = MV * vec4(vPosition,1);
+    vec4 vPosition4 = MV * vPosDeformed;
 	vec3 vPosition3 = vPosition4.xyz / vPosition4.w;
 
     // Get vector to light source
@@ -53,5 +77,5 @@ void main(void)
 
     // Don't forget to transform the geometry!
 
-    gl_Position = (MVP * (vec4(vPosition,1) + vec4(instanceOffset.x * yTime, 200.0f * sin(yTime), instanceOffset.z * yTime, 0)));
+    gl_Position = (MVP * (vPosition4 + vec4(instanceOffset.x * yTime, 200.0f * sin(yTime), instanceOffset.z * yTime, 0)));
 }
