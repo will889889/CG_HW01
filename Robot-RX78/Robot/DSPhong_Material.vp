@@ -23,8 +23,8 @@ uniform float fTime;
 // Wills
 uniform int isBody = 0;
 uniform mat4 DeformRotation;
-float startHeight = 10.0f;
-float endHeight = 80.0f;
+float startHeight = 0.0f;
+float endHeight = 17.0f;
 float interval = 1.0f;
 
 // Color to fragment program

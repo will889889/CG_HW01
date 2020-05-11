@@ -148,9 +148,9 @@ void updateObj(float deltaTime){
 
 	//	Body deform matrix
 	bodyTime += deltaTime;
-	float rotateAngle = 1.0f * (1.0f - abs(cos(bodyTime * bodyTimeScale)));
-	rotateAngle = rotateAngle < 0.2f ? 0.2f : rotateAngle;
-	bodyRotateMatrix = rotate(1.0f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
+	// float rotateAngle = 1.0f * (1.0f - abs(cos(bodyTime * bodyTimeScale)));
+	// rotateAngle = rotateAngle < 0.2f ? 0.2f : rotateAngle;
+	bodyRotateMatrix = rotate(0.5f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
 }
 
 
@@ -452,46 +452,60 @@ void updateModels(){
 	//	armRotateAngle [0 ~ 180]
 	//	1 - Arm_L
 	Rotatation[1] = rotate(-armRotateAngle, 1, 0, 0);
-	Translation[1] = translate(2, 1.0f + positionY, 0);
-	mat4 dRotation = DeformRotation;
+	Translation[1] = translate(2, 11.0f + positionY, 0);
+	mat4 dRotation = DeformRotation * translate(0, -positionY, 0);;
 	{
-		int level = 25;
+		int level = 15;
 		for (int i = 1; i < level; i++)
 		{
 			Translation[1] = DeformRotation * Translation[1];
 			Translation[1] *= translate(0, 1.0f, 0);
 		}
-		Translation[1] *= translate(0, 1.0f, 0);
+		// Translation[1] *= translate(0, positionY, 0);
 		for (int i = 1; i < level; i++)
 		{
 			dRotation = DeformRotation * dRotation;
 		}
 	}
-	mat4 fixedOffset = translate(16, 0, 0);
-	mat4 negfixedOffset = translate(-16, 0, 0);
-	Models[1] = Translation[1] * negfixedOffset * dRotation * fixedOffset * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
+	Models[1] = Translation[1] * translate(0, positionY, 0) * dRotation * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
 
 	//	2 - Arm_R
 	Rotatation[2] = rotate(armRotateAngle - 180.0f, 1, 0, 0);
-	Translation[2] = translate(-2, 1.0f + positionY, 0);
-	dRotation = DeformRotation;
+	Translation[2] = translate(-2, 11.0f + positionY, 0);
+	dRotation = DeformRotation * translate(0, -positionY, 0);;
 	{
-		int level = 25;
+		int level = 15;
 		for (int i = 1; i < level; i++)
 		{
 			Translation[2] = DeformRotation * Translation[2];
 			Translation[2] *= translate(0, 1.0f, 0);
 		}
-		Translation[2] *= translate(0, 1.0f, 0);
+		// Translation[2] = Translation[2] * translate(0, 10.0f, 0);
+		// Translation[2] *= translate(0, positionY, 0);
 		for (int i = 1; i < level; i++)
 		{
 			dRotation = DeformRotation * dRotation;
 		}
 	}
-	Models[2] = Translation[2] * fixedOffset * dRotation * negfixedOffset * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
+	Models[2] = Translation[2] * translate(0, positionY, 0) * dRotation * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
 
 	//	3 - Helmet
-	Models[3] = scale(1.0f, 1.0f, 1.0f);
+	Translation[3] = translate(0.2f , 27.4f + positionY, 0);
+	dRotation = DeformRotation * translate(0, -positionY, 0);
+	{
+		int level = 17;
+		for (int i = 1; i < level; i++)
+		{
+			Translation[3] = DeformRotation * Translation[3];
+			Translation[3] *= translate(0, 1.0f, 0);
+		}
+		// Translation[3] *= translate(0, 1.0f, 0);
+		for (int i = 1; i < level; i++)
+		{
+			dRotation = DeformRotation * dRotation;
+		}
+	}
+	Models[3] = Translation[3] * translate(0, positionY, 0) * dRotation * scale(1.0f, 1.0f, 1.0f);
 	return;
 
 
