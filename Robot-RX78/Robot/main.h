@@ -33,6 +33,7 @@ void ChangeSize(int w,int h);
 void display();
 void Keyboard(unsigned char key, int x, int y);
 void Mouse(int button,int state,int x,int y);
+void My_Mouse_Moving(int x, int y);
 
 void menuEvents(int option);
 void InstanceMenuEvents(int option);

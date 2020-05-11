@@ -26,6 +26,9 @@ int main(int argc, char** argv){
 	glutDisplayFunc(display);
 	glutReshapeFunc(ChangeSize);
 	glutKeyboardFunc(Keyboard);
+	glutPassiveMotionFunc(My_Mouse_Moving);
+	glutMotionFunc(My_Mouse_Moving);
+
 	int ActionMenu,ModeMenu,ShaderMenu, InstanceMenu;
 	InstanceMenu = glutCreateMenu(InstanceMenuEvents);//建立右鍵菜單
 	//加入右鍵物件
@@ -65,6 +68,9 @@ void ChangeSize(int w,int h){
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
+}
+void My_Mouse_Moving(int x, int y) {
+	cout << "x: " << x << ", y: " << y << "\n";
 }
 
 //	update	(called per 33ms)
