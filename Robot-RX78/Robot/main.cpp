@@ -67,57 +67,58 @@ void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
 }
 
-float timeStep = 0.05f;
-float timeCycle = 5.0f;
+//	update	(called per 33ms)
 void idle(int dummy){
-	fakeTime += 0.05f;
+	float deltaTime = 0.033f;
+	deltaTime *= timeSpeed;
+	fakeTime += deltaTime;
 
-	//	time cycle
-	for (int i = 0; i < 100; i++)
-	{
-		instanceOffsetY[i] = 0;
-		/*instanceOffsetY[i] += timeStep;
-		if (instanceOffsetY[i] >= timeCycle)
-			instanceOffsetY[i] -= timeCycle;*/
-	}
+	//	particle time elapse
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	instanceOffsetY[i] = 0;
+	//	/*instanceOffsetY[i] += timeStep;
+	//	if (instanceOffsetY[i] >= timeCycle)
+	//		instanceOffsetY[i] -= timeCycle;*/
+	//}
 
+	//	IDK what's this
 	isFrame = true;
-	int out = 0;
+
+	//	update model movements
 	if(action == WALK){
-		updateObj(dummy);
-		out = dummy+1;
-		if(out > 12) out = 1;
+		updateObj(deltaTime);
 	}
 	else if(action == IDLE){
-		resetObj(dummy);
-		out = 0;
+		resetObj();
 	}
+
+	//	draw stuff
 	glutPostRedisplay();
 	
-	glutTimerFunc (33, idle, out); 
+	//	keep update...
+	glutTimerFunc (33, idle, 0); 
 }
-void resetObj(int f){
-	for(int i = 0 ; i < PARTSNUM;i++){
-		angles[i] = 0.0f;
-	}	
-}
-void updateObj(int frame){
-	///
-	///return;
-	angle += 5.0f;
-	switch(frame){
-	case 0:
-		////左手
-		//angles[2] = -45;
-		////右手
+void resetObj(){
+	//	reset Arm rotation
+	armRotateAngle = 0;
 
-		////腿
-		//angles[13] = 45;	
-		
-		break;
-	case 1:
-		break;
-	}
+	//	reset deform rotation
+	//...
+}
+
+#define DOR(angle) (angle*3.1415/180);
+
+float armTime = 0;
+float armTimeScale = 10.0f;
+void updateObj(float deltaTime){
+	//	Arm rotation
+	armTime += deltaTime;
+	armRotateAngle = (90.0f * sin(armTime * armTimeScale)) + 90.0f;
+
+	//	Body deform matrix
+
+
 }
 
 
@@ -126,6 +127,10 @@ void updateObj(int frame){
  GLuint M_KsID;
 
 void init(){
+	cout << "sin(1) = " << sin(1.0f) << "\n";
+	cout << "sin(3.14) = " << sin(3.14f) << "\n";
+
+
 	isFrame = false;
 	pNo = 0;
 	for(int i = 0;i<PARTSNUM;i++)//初始化角度陣列
@@ -200,7 +205,7 @@ void init(){
 	//	init instanceOffsetY
 	for (int i = 0; i < 100; i++)
 	{
-		instanceOffsetY[i] = timeCycle * (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+		instanceOffsetY[i] = 1.0f * (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
 	}
 	//	instance VBO
 	glGenBuffers(1, &InstanceVBOY);
@@ -211,7 +216,6 @@ void init(){
 	glClearColor(0.0,0.0,0.0,1);//black screen
 }
 
-#define DOR(angle) (angle*3.1415/180);
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -331,35 +335,13 @@ void Obj2Buffer(){
 		KDs[mtlname] = Kds[i];
 	}
 
-	//load2Buffer("Obj/Arm_L2.obj", 0);
 	load2Buffer("Obj/BodyCapFace.obj", 0);
+	load2Buffer("Obj/Arm_L2.obj", 1);
+	load2Buffer("Obj/Arm_R2.obj", 2);
+
 	///load2Buffer("Obj/android.obj", 0);
 	/*load2Buffer("Obj/android.obj", 1);
 	load2Buffer("Obj/android.obj", 2);*/
-	/*load2Buffer("Obj/body.obj",0);
-
-	load2Buffer("Obj/ulefthand.obj",1);
-	load2Buffer("Obj/dlefthand.obj",2);
-	load2Buffer("Obj/lefthand.obj",3);
-	load2Buffer("Obj/lshouder.obj",4);
-	
-	load2Buffer("Obj/head.obj",5);
-
-	load2Buffer("Obj/urighthand.obj",6);
-	load2Buffer("Obj/drighthand.obj",7);
-	load2Buffer("Obj/righthand.obj",8);
-	load2Buffer("Obj/rshouder.obj",9);
-
-	load2Buffer("Obj/dbody.obj",11);
-	load2Buffer("Obj/back2.obj",10);
-
-	load2Buffer("Obj/uleftleg.obj",12);
-	load2Buffer("Obj/dleftleg.obj",13);
-	load2Buffer("Obj/leftfoot.obj",14);
-
-	load2Buffer("Obj/urightleg.obj",15);	
-	load2Buffer("Obj/drightleg.obj",16);	
-	load2Buffer("Obj/rightfoot.obj",17);*/
 	
 	GLuint totalSize[3] = {0,0,0};
 	GLuint offset[3] = {0,0,0};
@@ -427,26 +409,21 @@ void updateModels(){
 	Translation[0] = translate(0, positionY,0);
 	Models[0] = Translation[0]*Rotatation[0]*scale(1.0f, 1.0f, 1.0f);
 
-	///	only [0]
-	return;
+	//	armRotateAngle [0 ~ 180]
+	//	1 - Arm_L
+	Rotatation[1] = rotate(-armRotateAngle, 1, 0, 0);
+	Translation[1] = translate(0, 25.3f, 0);
+	Models[1] = Translation[1] * Rotatation[1];
 
-	//	1
-	beta = angle;
-	Rotatation[1] = rotate(angle2, 1, 0, 0);
-	Translation[1] = translate(0, 20.0f, 0);
-	Models[1] = Models[0] * scale(2.0f, 1.0f, 2.0f) * Translation[1] * Rotatation[1] * scale(0.3f, 0.5f, 0.3f);
+	//	2 - Arm_R
+	Rotatation[2] = rotate(armRotateAngle - 180.0f, 1, 0, 0);
+	Translation[2] = translate(0, 25.3f, 0);
+	Models[2] = Translation[2] * Rotatation[2];
 
-	//	2
-	beta = angle;
-	Rotatation[2] = rotate(angle2, 1, 0, 0);
-	Translation[2] = translate(0, 20.0f, 0);
-	Models[2] = Models[1] * scale(1.0f, 1.0f, 1.0f) * Translation[2] * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
-
-	///	only [0] & [1]
 	return;
 
 
-	//Body
+	//Body=======================================================
 	beta = angle;
 	Rotatation[0] = rotate(beta, 0, 1, 0);
 	Translation[0] = translate(0, 2.9 + 0, 0);
@@ -561,10 +538,12 @@ void Keyboard(unsigned char key, int x, int y){
 			instanceAmount = 0;
 		break;
 	case '3':
-		timeStep += 0.05f;
+		armTimeScale += 0.1f;
+		cout << "armTimeScale = " + std::to_string(armTimeScale) << "\n";
+
 		break;
 	case '4':
-		timeStep -= 0.05f;
+		armTimeScale -= 0.1f;
 
 		break;
 	case 'w':
@@ -581,12 +560,12 @@ void Keyboard(unsigned char key, int x, int y){
 		eyeAngley +=10;
 		break;
 	case 'r':
-		movey = 0;
-		movex = 0;
+		armRotateAngle += 10.0f;
+		cout << "armRotateAngle = " + std::to_string(armRotateAngle);
 		break;
 	case 't':
-		movey = 0;
-		movex = 0;
+		armRotateAngle -= 10.0f;
+		cout << "armRotateAngle = " + std::to_string(armRotateAngle);
 		break;
 	case 'q':
 		positionY += 1.0f;

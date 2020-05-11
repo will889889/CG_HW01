@@ -17,7 +17,7 @@ using namespace glm;
 
 
 
-#define PARTSNUM 1
+#define PARTSNUM 3
 ///#define PARTSNUM 18
 #define BODY 0
 #define LEFTSHOUDER 1
@@ -49,8 +49,8 @@ mat4 rotate(float angle,float x,float y,float z);
 void Obj2Buffer();
 void load2Buffer( char* obj,int);
 
-void updateObj(int);
-void resetObj(int);
+void updateObj(float);
+void resetObj();
 
 bool isFrame;
 
@@ -85,6 +85,8 @@ GLuint ModelID;
 ///	time
 GLint fTime;
 float fakeTime = 1.0f;
+float timeSpeed = 1.0f;		//	0 ~ 1
+float armRotateAngle = 0.0f;
 
 int vertices_size[PARTSNUM];
 int uvs_size[PARTSNUM];
@@ -101,6 +103,8 @@ mat4 View;
 mat4 Model;
 mat4 Models[PARTSNUM];
 
+#define DOR(angle) (angle*3.1415/180);
+
 #define leftHand 0
 #define rightHand 1
 #define leftFoot 2
@@ -108,4 +112,4 @@ mat4 Models[PARTSNUM];
 #define WALK 1
 #define IDLE 0
 int mode;
-int action;
+int action = WALK;
