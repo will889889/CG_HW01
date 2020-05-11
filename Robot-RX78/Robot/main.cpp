@@ -1,6 +1,6 @@
 #include "main.h"
 
-vec3 camera = vec3(0,0,20);
+vec3 camera = vec3(0,0,30);
 int main(int argc, char** argv){
 	glutInit(&argc, argv);
 	glutInitContextVersion(4,3);//以OpenGL version4.3版本為基準
@@ -450,13 +450,43 @@ void updateModels(){
 	//	armRotateAngle [0 ~ 180]
 	//	1 - Arm_L
 	Rotatation[1] = rotate(-armRotateAngle, 1, 0, 0);
-	Translation[1] = translate(0, 25.3f, 0);
-	Models[1] = Translation[1] * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
+	Translation[1] = translate(2, 1.0f + positionY, 0);
+	mat4 dRotation = DeformRotation;
+	{
+		int level = 25;
+		for (int i = 1; i < level; i++)
+		{
+			Translation[1] = DeformRotation * Translation[1];
+			Translation[1] *= translate(0, 1.0f, 0);
+		}
+		Translation[1] *= translate(0, 1.0f, 0);
+		for (int i = 1; i < level; i++)
+		{
+			dRotation = DeformRotation * dRotation;
+		}
+	}
+	mat4 fixedOffset = translate(18, 0, 0);
+	mat4 negfixedOffset = translate(-18, 0, 0);
+	Models[1] = Translation[1] * negfixedOffset * dRotation * fixedOffset * Rotatation[1] * scale(1.0f, 1.0f, 1.0f);
 
 	//	2 - Arm_R
 	Rotatation[2] = rotate(armRotateAngle - 180.0f, 1, 0, 0);
-	Translation[2] = translate(0, 25.3f, 0);
-	Models[2] = Translation[2] * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
+	Translation[2] = translate(-2, 1.0f + positionY, 0);
+	dRotation = DeformRotation;
+	{
+		int level = 25;
+		for (int i = 1; i < level; i++)
+		{
+			Translation[2] = DeformRotation * Translation[2];
+			Translation[2] *= translate(0, 1.0f, 0);
+		}
+		Translation[2] *= translate(0, 1.0f, 0);
+		for (int i = 1; i < level; i++)
+		{
+			dRotation = DeformRotation * dRotation;
+		}
+	}
+	Models[2] = Translation[2] * fixedOffset * dRotation * negfixedOffset * Rotatation[2] * scale(1.0f, 1.0f, 1.0f);
 
 	return;
 

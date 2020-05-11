@@ -74,7 +74,7 @@ int instanceAmount = 1;
 int pNo;
 
 float angles[PARTSNUM];
-float positionY = 0;
+float positionY = -25;
 float angle = 0.0;
 float angle2 = 0.0;
 float eyeAngley = 0.0;
