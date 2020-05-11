@@ -148,6 +148,8 @@ void updateObj(float deltaTime){
 
 	//	Body deform matrix
 	bodyTime += deltaTime;
+	float rotateAngle = 1.0f * (1.0f - abs(cos(bodyTime * bodyTimeScale)));
+	rotateAngle = rotateAngle < 0.2f ? 0.2f : rotateAngle;
 	bodyRotateMatrix = rotate(1.0f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
 }
 
