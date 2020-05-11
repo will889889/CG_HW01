@@ -68,7 +68,7 @@ GLuint InstanceVBO;
 GLuint InstanceVBOY;
 glm::vec3 instanceOffset[100];
 GLfloat instanceOffsetY[100];
-int instanceAmount = 50;
+int instanceAmount = 1;
 
 int pNo;
 

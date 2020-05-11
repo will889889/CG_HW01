@@ -29,7 +29,7 @@ int main(int argc, char** argv){
 	int ActionMenu,ModeMenu,ShaderMenu, InstanceMenu;
 	InstanceMenu = glutCreateMenu(InstanceMenuEvents);//建立右鍵菜單
 	//加入右鍵物件
-	glutAddMenuEntry("20", 0);
+	glutAddMenuEntry("1", 0);
 	glutAddMenuEntry("100", 1);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);	//與右鍵關聯
 
@@ -75,9 +75,10 @@ void idle(int dummy){
 	//	time cycle
 	for (int i = 0; i < 100; i++)
 	{
-		instanceOffsetY[i] += timeStep;
+		instanceOffsetY[i] = 0;
+		/*instanceOffsetY[i] += timeStep;
 		if (instanceOffsetY[i] >= timeCycle)
-			instanceOffsetY[i] -= timeCycle;
+			instanceOffsetY[i] -= timeCycle;*/
 	}
 
 	isFrame = true;
@@ -187,7 +188,7 @@ void init(){
 	
 	// Camera matrix
 	View       = glm::lookAt(
-		glm::vec3(0,10,25) , // Camera is at (0,10,25), in World Space
+		glm::vec3(0,5,25) , // Camera is at (0,10,25), in World Space
 		glm::vec3(0,0,0), // and looks at the origin
 		glm::vec3(0,1,0)  // Head is up (set to 0,1,0 to look upside-down)
 		);
@@ -211,9 +212,12 @@ void init(){
 	for (int i = 0; i < 100; i++)
 	{
 		glm::vec3 offset;
-		offset.x = (rand() % 2) ? (rand() % randCuts) : -(rand() % randCuts);
+		offset.x = 0;
+		offset.y = 0;
+		offset.z = 0;
+		/*offset.x = (rand() % 2) ? (rand() % randCuts) : -(rand() % randCuts);
 		offset.y = (rand() % 2) ? (rand() % randCuts) : -(rand() % randCuts);
-		offset.z = (rand() % 2) ? (rand() % randCuts) : -(rand() % randCuts);
+		offset.z = (rand() % 2) ? (rand() % randCuts) : -(rand() % randCuts);*/
 		instanceOffset[i] = offset;
 	}
 	//	instance VBO
@@ -244,7 +248,7 @@ void display(){
 	glUseProgram(program);//uniform參數數值前必須先use shader
 	float eyey = DOR(eyeAngley);
 	View       = lookAt(
-		               vec3(eyedistance*sin(eyey),2,eyedistance*cos(eyey)) , // Camera is at (0,0,20), in World Space
+		               vec3(eyedistance*sin(eyey),0,eyedistance*cos(eyey)) , // Camera is at (0,0,20), in World Space
 		               vec3(0,0,0), // and looks at the origin
 		               vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 		                );
@@ -345,7 +349,7 @@ void Obj2Buffer(){
 	std::vector<vec3> Kss;
 	std::vector<std::string> Materials;//mtl-name
 	std::string texture;
-	loadMTL("Obj/lloid.mtl", Kds, Kas, Kss, Materials, texture);
+	loadMTL("Obj/capBody_tex.mtl", Kds, Kas, Kss, Materials, texture);
 	///loadMTL("Obj/android.mtl", Kds, Kas, Kss, Materials, texture);
 	///loadMTL("Obj/gundam.mtl",Kds,Kas,Kss,Materials,texture);
 	//printf("%d\n",texture);
@@ -355,7 +359,7 @@ void Obj2Buffer(){
 		KDs[mtlname] = Kds[i];
 	}
 
-	load2Buffer("Obj/lloid.obj", 0);
+	load2Buffer("Obj/capBody_tex.obj", 0);
 	///load2Buffer("Obj/android.obj", 0);
 	/*load2Buffer("Obj/android.obj", 1);
 	load2Buffer("Obj/android.obj", 2);*/
@@ -699,7 +703,7 @@ void menuEvents(int option){}
 void InstanceMenuEvents(int option) {
 	switch (option) {
 	case 0:
-		instanceAmount = 20;
+		instanceAmount = 1;
 		break;
 	case 1:
 		instanceAmount = 100;
