@@ -320,7 +320,8 @@ void Obj2Buffer(){
 	std::vector<vec3> Kss;
 	std::vector<std::string> Materials;//mtl-name
 	std::string texture;
-	loadMTL("Obj/capBody_tex.mtl", Kds, Kas, Kss, Materials, texture);
+	//loadMTL("Obj/Arm_L2.mtl", Kds, Kas, Kss, Materials, texture);
+	loadMTL("Obj/BodyCapFace.mtl", Kds, Kas, Kss, Materials, texture);
 	///loadMTL("Obj/android.mtl", Kds, Kas, Kss, Materials, texture);
 	///loadMTL("Obj/gundam.mtl",Kds,Kas,Kss,Materials,texture);
 	//printf("%d\n",texture);
@@ -330,7 +331,8 @@ void Obj2Buffer(){
 		KDs[mtlname] = Kds[i];
 	}
 
-	load2Buffer("Obj/capBody_tex.obj", 0);
+	//load2Buffer("Obj/Arm_L2.obj", 0);
+	load2Buffer("Obj/BodyCapFace.obj", 0);
 	///load2Buffer("Obj/android.obj", 0);
 	/*load2Buffer("Obj/android.obj", 1);
 	load2Buffer("Obj/android.obj", 2);*/
