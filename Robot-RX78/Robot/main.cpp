@@ -10,7 +10,7 @@ int main(int argc, char** argv){
 
 	//multisample for golygons smooth
 	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE);
-	glutInitWindowSize(1280, 720);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("OpenGL 4.3 - Robot");
 
 	glewExperimental = GL_TRUE; //�m��glewInit()���e
@@ -142,10 +142,10 @@ void idle(int dummy){
 		float process = 1.0f - (ZawarudoShowTime / ZawarudoTotalShowTime);
 
 		float raduisT = DOR(process * 180.0f);
-		float speedT = DOR((process * 90.0f + 90.0f));
+		float speedT = DOR((process * 180.0f + 90.0f));
 
 		fxRadius = 1.0f * sinf(raduisT);
-		timeSpeed = sinf(speedT);
+		timeSpeed = sinf(speedT) < 0.05f ? 0.05f : sinf(speedT);
 		cout << "speedT = " << speedT << "\n";
 
 		if (ZawarudoShowTime <= 0)
