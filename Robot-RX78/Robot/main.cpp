@@ -1,10 +1,12 @@
 #include "main.h"
 
+#pragma region Zawarudo Vars
 GLuint          window_vao;
 GLuint			window_buffer;
 GLuint			FBO;
 GLuint			depthRBO;
 GLuint			FBODataTexture;
+int window_width = 1280, window_height = 720;
 
 static const GLfloat window_positions[] =
 {
@@ -13,6 +15,8 @@ static const GLfloat window_positions[] =
 	-1.0f,1.0f,0.0f,1.0f,
 	1.0f,1.0f,1.0f,1.0f
 };
+#pragma endregion
+
 
 vec3 camera = vec3(0,0,30);
 int main(int argc, char** argv){
@@ -23,7 +27,7 @@ int main(int argc, char** argv){
 
 	//multisample for golygons smooth
 	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE);
-	glutInitWindowSize(1280, 720);
+	glutInitWindowSize(window_width, window_height);
 	glutCreateWindow("OpenGL 4.3 - Robot");
 
 	glewExperimental = GL_TRUE; //竚glewInit()ぇ玡
@@ -47,8 +51,9 @@ int main(int argc, char** argv){
 	initCubemapShader();
 	///
 
-
-	
+	// Will- zawarudo initial
+	initZawarudo();
+	cout << "initZawarudo...Done\n";
 
 	init();
 	glutDisplayFunc(display);
@@ -97,26 +102,7 @@ void ChangeSize(int w,int h){
 	screenW = w;
 	screenH = h;
 	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
-
-	// Will - For framebuffer of Zawarudo
-	glDeleteRenderbuffers(1, &depthRBO);
-	glDeleteTextures(1, &FBODataTexture);
-	glGenRenderbuffers(1, &depthRBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
-
-	glGenTextures(1, &FBODataTexture);
-	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
+	reshapeZawarudo(w, h);
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
@@ -263,7 +249,6 @@ void init(){
 	glBindBufferRange(GL_UNIFORM_BUFFER,0,UBO,0,UBOsize);
 	glUniformBlockBinding(program, MatricesIdx,0);
 
-
 	//	init instanceOffset
 	int randCuts = 100;
 	for (int i = 0; i < 100; i++)
@@ -295,34 +280,13 @@ void init(){
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glClearColor(0.0, 0.0, 0.0, 1);//black screen
-
-	///////////////////////////	
-	//Initialize shader2
-	///////////////////////////	
-	//ShaderInfo shaders_zawarudo[] = {
-	//	{ GL_VERTEX_SHADER, "Zawarudo_Effect.vp" },//vertex shader
-	//	{ GL_FRAGMENT_SHADER, "Zawarudo_Effect.fp" },//fragment shader
-	//	{ GL_NONE, NULL } };
-	//program_zawarudo = LoadShaders(shaders_zawarudo);//弄shader
-
-	//glGenVertexArrays(1, &window_vao);
-	//glBindVertexArray(window_vao);
-
-	//glGenBuffers(1, &window_buffer);
-	//glBindBuffer(GL_ARRAY_BUFFER, window_buffer);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(window_positions), window_positions, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, 0);
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, (const GLvoid*)(sizeof(GL_FLOAT) * 2));
-
-	//glEnableVertexAttribArray(0);
-	//glEnableVertexAttribArray(1);
-
-	//glGenFramebuffers(1, &FBO);
 }
 
 void display(){
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -340,6 +304,7 @@ void display(){
 	glUseProgram(program);//uniform把计计玡ゲ斗use shader
 	
 	updateModels();
+
 	//update data to UBO for MVP
 	glBindBuffer(GL_UNIFORM_BUFFER,UBO);
 	glBufferSubData(GL_UNIFORM_BUFFER,0,sizeof(mat4),&View);
@@ -427,8 +392,12 @@ void display(){
 		}//end for loop for draw one part of the robot	
 		
 	}//end for loop for updating and drawing model
+	
 	glFlush();//眏磅︽ΩOpenGL commands
 	glutSwapBuffers();//秸传玡㎝buffer ,讽籓buffer礶Ч㎝玡bufferユ传ㄏиǎウ
+
+	// Will - draw Zawarudo
+	drawZawarudo();
 }
 
 void Obj2Buffer(){
@@ -942,3 +911,91 @@ TextureData Load_png(const char* path, bool mirroredY)
 }
 
 #pragma endregion
+
+#pragma region Zawarudo
+
+
+void initZawarudo()
+{
+	///////////////////////////	
+	//Initialize shader2
+	///////////////////////////	
+	ShaderInfo shaders_zawarudo[] = {
+		{ GL_VERTEX_SHADER, "Zawarudo_Effect.vp" },//vertex shader
+		{ GL_FRAGMENT_SHADER, "Zawarudo_Effect.fp" },//fragment shader
+		{ GL_NONE, NULL } };
+	program_zawarudo = LoadShaders(shaders_zawarudo);//弄shader
+
+	glUseProgram(program_zawarudo);//uniform把计计玡ゲ斗use shader
+
+	glGenVertexArrays(1, &window_vao);
+	glBindVertexArray(window_vao);
+
+	glGenBuffers(1, &window_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, window_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(window_positions), window_positions, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, (const GLvoid*)(sizeof(GL_FLOAT) * 2));
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glGenFramebuffers(1, &FBO);
+	glGenRenderbuffers(1, &depthRBO); //Create Depth RBO
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, window_width,
+		window_height);
+	glGenTextures(1, &FBODataTexture); //Create fobDataTexture
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window_width, window_height, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
+	//Set depthrbo to current fbo
+	glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+	//Set buffertexture to current fbo
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
+}
+void drawZawarudo()
+{
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+	glBindVertexArray(window_vao);
+	glUseProgram(program_zawarudo);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glutSwapBuffers();
+}
+void reshapeZawarudo(int w, int h)
+{
+	// Will - For framebuffer of Zawarudo
+	glDeleteRenderbuffers(1, &depthRBO);
+	glDeleteTextures(1, &FBODataTexture);
+	glGenRenderbuffers(1, &depthRBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
+
+	glGenTextures(1, &FBODataTexture);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
+}
+#pragma endregion
+

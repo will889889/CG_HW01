@@ -51,6 +51,15 @@ void drawCubemapShader();
 TextureData Load_png(const char* path, bool mirroredY);
 #pragma endregion
 
+#pragma region Zawarudo
+
+void initZawarudo();
+void drawZawarudo();
+void reshapeZawarudo(int w, int h);
+
+#pragma endregion
+
+
 void ChangeSize(int w,int h);
 void display();
 void Keyboard(unsigned char key, int x, int y);
