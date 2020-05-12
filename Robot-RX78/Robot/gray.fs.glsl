@@ -21,7 +21,7 @@ void main(void)
 	vec2 toCenter = normalize(vec2(0.5f - fs_in.texcoord.x, 0.5f - fs_in.texcoord.y));
 	float toClevel = sqrt(pow(0.5f - fs_in.texcoord.x, 2) + pow(0.5f - fs_in.texcoord.y, 2));
 
-	float level = sin(-2 * PI * pow(toClevel, 2) / fxRadius) * (fxRadius + 1.2f * toClevel) / -fxRadius;
+	float level = sin(-2 * PI * pow(toClevel, 2) / fxRadius) * (fxRadius + 1.5f * toClevel) / fxRadius;
 	vec2 coord = toCenter * level + fs_in.texcoord;
 	float radius = cos(abs(10 * time / PI)) * fxRadius;
 
