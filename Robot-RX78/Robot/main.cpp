@@ -10,7 +10,7 @@ int main(int argc, char** argv){
 
 	//multisample for golygons smooth
 	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(1000, 1000);
 	glutCreateWindow("OpenGL 4.3 - Robot");
 
 	glewExperimental = GL_TRUE; //�m��glewInit()���e
@@ -199,7 +199,7 @@ void resetObj(){
 float armTime = 0;
 float armTimeScale = 30.0f;
 float bodyTime = 0;
-float bodyTimeScale = 15.0f;
+float bodyTimeScale = 0.0f;
 void updateObj(float deltaTime){
 	//	Arm rotation
 	armTime += deltaTime;
@@ -803,7 +803,7 @@ void ExtraMenuEvents(int option){
 		ShowLegs = !ShowLegs;
 		break;
 	case 1:	//	skybox
-
+		skyboxIndex = skyboxIndex == 1 ? 2 : 1;
 		break;
 	}
 }
@@ -811,8 +811,10 @@ void ExtraMenuEvents(int option){
 
 #pragma region CubemapShader
 string imagePath = "./Imgs/";
+string imagePath2 = "./Imgs/Cubemap/cubemap2/";
 GLuint cubemapProgram;
 GLuint cubemapTextureID;
+GLuint cubemapTextureID2;
 GLuint cubemapUm4mvLocation;
 GLuint cubemapUm4pLocation;
 GLuint cubemap_vao, cubemap_vbo, cubemap_ebo;
@@ -921,7 +923,49 @@ void initCubemapShader()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	///glUseProgram(0);
+
+	//	another texture
+	std::vector<CubemapTexture> textures2(6);
+	textures2[0].type = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+	textures2[0].fileName = imagePath2 + "posx.jpg";
+	textures2[1].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+	textures2[1].fileName = imagePath2 + "negx.jpg";
+	textures2[2].type = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+	textures2[2].fileName = imagePath2 + "negy.jpg";
+	textures2[3].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+	textures2[3].fileName = imagePath2 + "posy.jpg";
+	textures2[4].type = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+	textures2[4].fileName = imagePath2 + "posz.jpg";
+	textures2[5].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+	textures2[5].fileName = imagePath2 + "negz.jpg";
+
+	glGenTextures(1, &cubemapTextureID2);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID2);
+
+	for (int i = 0; i < textures2.size(); ++i)
+	{
+		TextureData texData = Load_png(textures2[i].fileName.c_str(), true);
+		if (texData.data != nullptr)
+		{
+			glTexImage2D(textures2[i].type, 0, GL_RGBA, texData.width, texData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data);
+			delete[] texData.data;
+		}
+		else
+		{
+			printf("Load texture file error %s\n", textures2[i].fileName.c_str());
+		}
+	}
+
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 #pragma endregion
 }
 
@@ -937,7 +981,11 @@ void drawCubemapShader()
 	//	render
 	glBindVertexArray(cubemap_vao);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
+	if(skyboxIndex == 1)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
+	else
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID2);
+
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	glBindVertexArray(0);

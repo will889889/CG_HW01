@@ -77,8 +77,9 @@ void initWindowShader();
 #pragma region uiEvents
 bool ZawarudoShowing = false;
 float ZawarudoShowTime = 0;
-float ZawarudoTotalShowTime = 2.0f;
+float ZawarudoTotalShowTime = 1.5f;
 bool ShowLegs = false;
+int skyboxIndex = 1;
 #pragma endregion
 
 
@@ -89,7 +90,6 @@ void Mouse(int button,int state,int x,int y);
 void My_Mouse_Moving(int x, int y);
 
 void menuEvents(int option);
-void InstanceMenuEvents(int option);
 void ActionMenuEvents(int option);
 void BodyMovementMenuEvents(int option);
 void ExtraMenuEvents(int option);
