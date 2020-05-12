@@ -12,6 +12,5 @@ uniform samplerCubeArray texArray;
 
 void main()
 {
-	//fragColor = texture(tex, vertexData.texcoord);
-	fragColor = vec4(0.8,0.8,1.0,1); 
+	fragColor = texture(tex, vertexData.texcoord);
 }
