@@ -405,7 +405,7 @@ void display(){
 		
 	}//end for loop for updating and drawing model
 
-	///
+	///	window shader render
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -415,6 +415,7 @@ void display(){
 	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
 	glBindVertexArray(window_vao);
 	glUseProgram(windowProgram);
+	glUniform1f(fxRadiusID, fxRadius);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glutSwapBuffers();
 
@@ -711,12 +712,12 @@ void Keyboard(unsigned char key, int x, int y){
 		eyeAngley +=10;
 		break;
 	case 'r':
-		armRotateAngle += 10.0f;
-		cout << "armRotateAngle = " + std::to_string(armRotateAngle);
+		fxRadius += 0.1f;
+		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 't':
-		armRotateAngle -= 10.0f;
-		cout << "armRotateAngle = " + std::to_string(armRotateAngle);
+		fxRadius -= 0.1f;
+		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 'q':
 		positionY += 1.0f;
@@ -943,6 +944,9 @@ void initWindowShader()
 	windowProgram = LoadShaders(shaders);//Ū��shader
 
 	glUseProgram(windowProgram);//uniform�ѼƼƭȫe������use shader
+
+	//	attribute
+	fxRadiusID = glGetUniformLocation(windowProgram, "fxRadius");
 
 
 	glGenVertexArrays(1, &window_vao);
