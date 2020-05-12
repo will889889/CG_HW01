@@ -2,6 +2,7 @@
 
 uniform sampler2D tex;
 uniform float colorError = 0.0f;
+uniform float fxRadius;
 
 out vec4 color;                                                                
 
