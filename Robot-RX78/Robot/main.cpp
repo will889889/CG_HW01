@@ -110,10 +110,12 @@ void My_Mouse_Moving(int x, int y) {
 	y = y - screenH / 2.0f;
 	float distance = sqrtf(x*x + y * y);
 
-
-	timeSpeed = 1.0f - (distance) / 500.0f;
-	if (timeSpeed < 0)
-		timeSpeed = 0;
+	if (!ZawarudoShowing)
+	{
+		timeSpeed = 1.0f - (distance) / 500.0f;
+		if (timeSpeed < 0)
+			timeSpeed = 0;
+	}
 
 	/*if (distance < 100)
 		timeSpeed = 1.0f;
@@ -130,6 +132,31 @@ void My_Mouse_Moving(int x, int y) {
 //	update	(called per 33ms)
 void idle(int dummy){
 	float deltaTime = 0.033f;
+
+	//	zawarudo	(use real deltatime)
+	if (ZawarudoShowing && ZawarudoShowTime > 0)
+	{
+		ZawarudoShowTime -= deltaTime;
+
+		//	0 ~ 1
+		float process = 1.0f - (ZawarudoShowTime / ZawarudoTotalShowTime);
+
+		float raduisT = DOR(process * 180.0f);
+		float speedT = DOR((process * 90.0f + 90.0f));
+
+		fxRadius = 1.0f * sinf(raduisT);
+		timeSpeed = sinf(speedT);
+		cout << "speedT = " << speedT << "\n";
+
+		if (ZawarudoShowTime <= 0)
+		{
+			timeSpeed = 0;
+			fxRadius = 0;
+			ZawarudoShowing = false;
+		}
+	}
+
+
 	deltaTime *= timeSpeed;
 	fakeTime += deltaTime;
 
@@ -161,7 +188,7 @@ void idle(int dummy){
 }
 void resetObj(){
 	//	reset Arm rotation
-	armRotateAngle = 0;
+	//armRotateAngle = 0;
 
 	//	reset deform rotation
 	//...
@@ -730,11 +757,10 @@ void Keyboard(unsigned char key, int x, int y){
 
 void menuEvents(int option){}
 void ActionMenuEvents(int option) {
-	if (ZawarudoShow == false)
+	if (ZawarudoShowing == false)
 	{
-		ZawarudoShow = true;
-		//time
-		//...
+		ZawarudoShowTime = ZawarudoTotalShowTime;
+		ZawarudoShowing = true;
 	}
 }
 void BodyMovementMenuEvents(int option) {

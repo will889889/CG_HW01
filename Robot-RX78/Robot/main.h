@@ -71,7 +71,9 @@ static const GLfloat window_positions[] =
 void initWindowShader();
 #pragma endregion
 #pragma region uiEvents
-bool ZawarudoShow = false;
+bool ZawarudoShowing = false;
+float ZawarudoShowTime = 0;
+float ZawarudoTotalShowTime = 2.0f;
 #pragma endregion
 
 
