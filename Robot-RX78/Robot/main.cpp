@@ -470,6 +470,8 @@ void Obj2Buffer(){
 	load2Buffer("Obj/Arm_R2.obj", 2);
 	load2Buffer("Obj/Helmet.obj", 3);
 
+	load2Buffer("Obj/Arm_L2.obj", 4);
+	load2Buffer("Obj/Arm_R2.obj", 5);
 
 	///load2Buffer("Obj/android.obj", 0);
 	/*load2Buffer("Obj/android.obj", 1);
@@ -598,6 +600,23 @@ void updateModels(){
 		}
 	}
 	Models[3] = Translation[3] * translate(0, positionY, 0) * dRotation * scale(1.0f, 1.0f, 1.0f);
+
+	//	4 - legL
+	Rotatation[4] = rotate(armRotateAngle - 90.0f, 1, 0, 0);
+	Translation[4] = translate(10, positionY + 5.0f, 0);
+	Models[4] = Translation[4] * Rotatation[4] * scale(1.0f, 1.0f, 1.0f);
+
+	//	5 - legR
+	Rotatation[5] = rotate(180-armRotateAngle - 90.0f, 1, 0, 0);
+	Translation[5] = translate(-10, positionY + 5.0f, 0);
+	Models[5] = Translation[5] * Rotatation[5] * scale(1.0f, 1.0f, 1.0f);
+
+	if (!ShowLegs)
+	{
+		Models[4] = scale(0, 0, 0);
+		Models[5] = scale(0, 0, 0);
+	}
+
 	return;
 
 
@@ -781,7 +800,7 @@ void BodyMovementMenuEvents(int option) {
 void ExtraMenuEvents(int option){
 	switch(option){
 	case 0:	//	legs
-
+		ShowLegs = !ShowLegs;
 		break;
 	case 1:	//	skybox
 
