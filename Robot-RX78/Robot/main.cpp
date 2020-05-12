@@ -326,17 +326,19 @@ void display(){
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+	float eyey = DOR(eyeAngley);
+	View = lookAt(
+		vec3(eyedistance*sin(eyey), 0, eyedistance*cos(eyey)), // Camera is at (0,0,20), in World Space
+		vec3(0, 0, 0), // and looks at the origin
+		vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
+
 	///	cubemap
-	///drawCubemapShader();
+	drawCubemapShader();
 
 	glBindVertexArray(VAO);
 	glUseProgram(program);//uniform參數數值前必須先use shader
-	float eyey = DOR(eyeAngley);
-	View       = lookAt(
-		               vec3(eyedistance*sin(eyey), 0,eyedistance*cos(eyey)) , // Camera is at (0,0,20), in World Space
-		               vec3(0,0,0), // and looks at the origin
-		               vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-		                );
+	
 	updateModels();
 	//update data to UBO for MVP
 	glBindBuffer(GL_UNIFORM_BUFFER,UBO);
@@ -894,7 +896,7 @@ void drawCubemapShader()
 	//	enable
 	glUseProgram(cubemapProgram);
 	//	SetMVMat
-	glUniformMatrix4fv(cubemapUm4mvLocation, 1, GL_FALSE, &View[0][0]);
+	glUniformMatrix4fv(cubemapUm4mvLocation, 1, GL_FALSE, &(glm::mat4(glm::mat3(View))[0][0]));
 	glUniformMatrix4fv(cubemapUm4pLocation, 1, GL_FALSE, &Projection[0][0]);
 	/*glUniformMatrix4fv(cubemapUm4mvLocation, 1, GL_FALSE, glm::value_ptr(View));
 	glUniformMatrix4fv(cubemapUm4pLocation, 1, GL_FALSE, glm::value_ptr(Projection));*/
