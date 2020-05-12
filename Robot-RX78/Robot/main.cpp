@@ -22,6 +22,20 @@ int main(int argc, char** argv){
 	//glDepthFunc(GL_LESS);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
+
+	///	init cubemap shader
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	///	cubemap shader
+	cout << "initCubemapShader\n";
+	initCubemapShader();
+	///
+
+
+	
+
 	init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(ChangeSize);
@@ -159,9 +173,6 @@ void updateObj(float deltaTime){
  GLuint M_KsID;
 
 void init(){
-	cout << "sin(1) = " << sin(1.0f) << "\n";
-	cout << "sin(3.14) = " << sin(3.14f) << "\n";
-
 
 	isFrame = false;
 	pNo = 0;
@@ -249,11 +260,16 @@ void init(){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 100, &instanceOffsetY[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
 	glClearColor(0.0,0.0,0.0,1);//black screen
 }
 
 void display(){
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	///	cubemap
+	///drawCubemapShader();
 
 	glBindVertexArray(VAO);
 	glUseProgram(program);//uniform把计计玡ゲ斗use shader
@@ -444,7 +460,6 @@ void updateModels(){
 	DeformRotation = bodyRotateMatrix;
 
 	//	0
-	beta = angle;
 	Rotatation[0] = rotate(0,1,0,0);
 	Translation[0] = translate(0, positionY,0);
 	Models[0] = Translation[0]*Rotatation[0]* scale(1.0f, 1.0f, 1.0f);
@@ -510,7 +525,6 @@ void updateModels(){
 
 
 	//Body=======================================================
-	beta = angle;
 	Rotatation[0] = rotate(beta, 0, 1, 0);
 	Translation[0] = translate(0, 2.9 + 0, 0);
 	Models[0] = Translation[0] * Rotatation[0];
@@ -699,3 +713,172 @@ void ModeMenuEvents(int option){
 void ShaderMenuEvents(int option){
 	pNo = option;
 }
+
+
+#pragma region CubemapShader
+string imagePath = "./Imgs/";
+GLuint cubemapProgram;
+GLuint cubemapTextureID;
+GLuint cubemapUm4mvLocation;
+GLuint cubemapUm4pLocation;
+GLuint cubemap_vao, cubemap_vbo, cubemap_ebo;
+void initCubemapShader()
+{
+	//	create program
+	ShaderInfo shaders[] = {
+		{ GL_VERTEX_SHADER, "cubemap.vs.glsl" },//vertex shader
+		{ GL_FRAGMENT_SHADER, "cubemap.fs.glsl" },//fragment shader
+		{ GL_NONE, NULL } };
+	cubemapProgram = LoadShaders(shaders);//弄shader
+
+	glUseProgram(cubemapProgram);//uniform把计计玡ゲ斗use shader
+
+	cubemapUm4mvLocation = glGetUniformLocation(cubemapProgram, "um4mv");
+	cubemapUm4pLocation = glGetUniformLocation(cubemapProgram, "um4p");
+
+#pragma region Create box
+	float vertices[] = {
+		-0.5, -0.5, -0.5,
+		0.5, -0.5, -0.5,
+		0.5, 0.5, -0.5,
+		-0.5, 0.5, -0.5,
+		-0.5, -0.5, 0.5,
+		0.5, -0.5, 0.5,
+		0.5, 0.5, 0.5,
+		-0.5, 0.5, 0.5
+	};
+
+	int indices[] = {
+		// posx
+		1, 5, 6,
+		6, 2, 1,
+		// negx
+		4, 0, 3,
+		3, 7, 4,
+		// posy
+		3, 2, 6,
+		6, 7, 3,
+		// neg y
+		4, 5, 1,
+		1, 0, 4,
+		// posz
+		5, 4, 7,
+		7, 6, 5,
+		// negz
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	glGenVertexArrays(1, &cubemap_vao);
+	glBindVertexArray(cubemap_vao);
+
+	glGenBuffers(1, &cubemap_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, cubemap_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+
+	glGenBuffers(1, &cubemap_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubemap_ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+#pragma endregion
+
+#pragma region Load texture
+	std::vector<CubemapTexture> textures(6);
+	textures[0].type = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+	textures[0].fileName = imagePath + "posx.jpg";
+	textures[1].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+	textures[1].fileName = imagePath + "negx.jpg";
+	textures[2].type = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+	textures[2].fileName = imagePath + "negy.jpg";
+	textures[3].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+	textures[3].fileName = imagePath + "posy.jpg";
+	textures[4].type = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+	textures[4].fileName = imagePath + "posz.jpg";
+	textures[5].type = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+	textures[5].fileName = imagePath + "negz.jpg";
+
+	glGenTextures(1, &cubemapTextureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
+
+	for (int i = 0; i < textures.size(); ++i)
+	{
+		TextureData texData = Load_png(textures[i].fileName.c_str(), true);
+		if (texData.data != nullptr)
+		{
+			glTexImage2D(textures[i].type, 0, GL_RGBA, texData.width, texData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data);
+			delete[] texData.data;
+		}
+		else
+		{
+			printf("Load texture file error %s\n", textures[i].fileName.c_str());
+		}
+	}
+
+	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	///glUseProgram(0);
+#pragma endregion
+}
+
+void drawCubemapShader()
+{
+	//	enable
+	glUseProgram(cubemapProgram);
+	//	SetMVMat
+	glUniformMatrix4fv(cubemapUm4mvLocation, 1, GL_FALSE, &View[0][0]);
+	glUniformMatrix4fv(cubemapUm4pLocation, 1, GL_FALSE, &Projection[0][0]);
+	/*glUniformMatrix4fv(cubemapUm4mvLocation, 1, GL_FALSE, glm::value_ptr(View));
+	glUniformMatrix4fv(cubemapUm4pLocation, 1, GL_FALSE, glm::value_ptr(Projection));*/
+	//	render
+	glBindVertexArray(cubemap_vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glBindVertexArray(0);
+	//	disable
+	glUseProgram(0);
+}
+TextureData Load_png(const char* path, bool mirroredY)
+{
+	TextureData texture;
+	int n;
+	stbi_uc *data = stbi_load(path, &texture.width, &texture.height, &n, 4);
+	if (data != NULL)
+	{
+		texture.data = new unsigned char[texture.width * texture.height * 4 * sizeof(unsigned char)];
+		memcpy(texture.data, data, texture.width * texture.height * 4 * sizeof(unsigned char));
+		// vertical-mirror image data
+		if (mirroredY)
+		{
+			for (size_t i = 0; i < texture.width; i++)
+			{
+				for (size_t j = 0; j < texture.height / 2; j++)
+				{
+					for (size_t k = 0; k < 4; k++) {
+						std::swap(texture.data[(j * texture.width + i) * 4 + k], texture.data[((texture.height - j - 1) * texture.width + i) * 4 + k]);
+					}
+				}
+			}
+		}
+		stbi_image_free(data);
+	}
+	else
+	{
+		cout << "stbi_load = null\n";
+	}
+	return texture;
+}
+
+#pragma endregion
