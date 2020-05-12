@@ -52,6 +52,10 @@ TextureData Load_png(const char* path, bool mirroredY);
 #pragma endregion
 
 #pragma region windowShader
+//	uniform attribute
+GLint fxRadiusID;
+float fxRadius = 0;
+
 GLuint windowProgram;
 GLuint window_vao, window_vbo;
 GLuint			FBODataTexture;
