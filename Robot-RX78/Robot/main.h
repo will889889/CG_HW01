@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -13,6 +15,8 @@ using namespace std;
 // Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "stb_image.h"
 using namespace glm;
 
 
@@ -28,6 +32,24 @@ using namespace glm;
 void updateModels();
 
 void init();
+#pragma region Cubemap shader
+typedef struct CubemapTexture
+{
+	GLenum type;
+	std::string fileName;
+};
+typedef struct _TextureData
+{
+	_TextureData() : width(0), height(0), data(0) {}
+	int width;
+	int height;
+	unsigned char* data;
+} TextureData;
+
+void initCubemapShader();
+void drawCubemapShader();
+TextureData Load_png(const char* path, bool mirroredY);
+#pragma endregion
 
 void ChangeSize(int w,int h);
 void display();
@@ -75,7 +97,6 @@ int pNo;
 
 float angles[PARTSNUM];
 float positionY = -25;
-float angle = 0.0;
 float angle2 = 0.0;
 float eyeAngley = 0.0;
 float eyedistance = 100;
