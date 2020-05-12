@@ -20,14 +20,15 @@ int main(int argc, char** argv){
 
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LESS);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	///glCullFace(GL_BACK);
+	///glEnable(GL_CULL_FACE);
+
 
 	///	init cubemap shader
 	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	///glEnable(GL_TEXTURE_2D);
+	///glEnable(GL_BLEND);
+	///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	///	cubemap shader
 	cout << "initCubemapShader\n";
 	initCubemapShader();
@@ -83,6 +84,29 @@ void ChangeSize(int w,int h){
 	screenW = w;
 	screenH = h;
 	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
+
+#pragma region windowShader - fbo & texture?
+	glDeleteRenderbuffers(1, &depthRBO);
+	glDeleteTextures(1, &FBODataTexture);
+	glGenRenderbuffers(1, &depthRBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
+
+	glGenTextures(1, &FBODataTexture);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
+#pragma endregion
+
+
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
@@ -260,13 +284,26 @@ void init(){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 100, &instanceOffsetY[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	///	windowShader
+	initWindowShader();
 
 	glClearColor(0.0,0.0,0.0,1);//black screen
 }
 
 void display(){
+
+	///
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	///
+	static const GLfloat green[] = { 0.0f, 0.25f, 0.0f, 1.0f };
+	static const GLfloat one = 1.0f;
+	glClearBufferfv(GL_COLOR, 0, green);
+	glClearBufferfv(GL_DEPTH, 0, &one);
+
 
 	float eyey = DOR(eyeAngley);
 	View = lookAt(
@@ -369,8 +406,22 @@ void display(){
 		}//end for loop for draw one part of the robot	
 		
 	}//end for loop for updating and drawing model
-	glFlush();//強制執行上次的OpenGL commands
-	glutSwapBuffers();//調換前台和後台buffer ,當後臺buffer畫完和前台buffer交換使我們看見它
+
+	///
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+	glBindVertexArray(window_vao);
+	glUseProgram(windowProgram);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glutSwapBuffers();
+
+	///glFlush();//強制執行上次的OpenGL commands
+	///glutSwapBuffers();//調換前台和後台buffer ,當後臺buffer畫完和前台buffer交換使我們看見它
 }
 
 void Obj2Buffer(){
@@ -884,3 +935,30 @@ TextureData Load_png(const char* path, bool mirroredY)
 }
 
 #pragma endregion
+void initWindowShader()
+{
+	//	create program
+	ShaderInfo shaders[] = {
+		{ GL_VERTEX_SHADER, "gray.vs.glsl" },//vertex shader
+		{ GL_FRAGMENT_SHADER, "gray.fs.glsl" },//fragment shader
+		{ GL_NONE, NULL } };
+	windowProgram = LoadShaders(shaders);//讀取shader
+
+	glUseProgram(windowProgram);//uniform參數數值前必須先use shader
+
+
+	glGenVertexArrays(1, &window_vao);
+	glBindVertexArray(window_vao);
+
+	glGenBuffers(1, &window_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, window_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(window_positions), window_positions, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, (const GLvoid*)(sizeof(GL_FLOAT) * 2));
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glGenFramebuffers(1, &FBO);
+}

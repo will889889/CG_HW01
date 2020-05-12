@@ -51,6 +51,23 @@ void drawCubemapShader();
 TextureData Load_png(const char* path, bool mirroredY);
 #pragma endregion
 
+#pragma region windowShader
+GLuint windowProgram;
+GLuint window_vao, window_vbo;
+GLuint			FBODataTexture;
+GLuint			FBO;
+GLuint			depthRBO;
+static const GLfloat window_positions[] =
+{
+	1.0f,-1.0f,1.0f,0.0f,
+	-1.0f,-1.0f,0.0f,0.0f,
+	-1.0f,1.0f,0.0f,1.0f,
+	1.0f,1.0f,1.0f,1.0f
+};
+void initWindowShader();
+#pragma endregion
+
+
 void ChangeSize(int w,int h);
 void display();
 void Keyboard(unsigned char key, int x, int y);
