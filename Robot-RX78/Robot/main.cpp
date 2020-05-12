@@ -136,7 +136,7 @@ void idle(int dummy){
 	float deltaTime = 0.033f;
 	deltaTime *= timeSpeed;
 	fakeTime += deltaTime;
-
+	zaTime += deltaTime;
 	//	particle time elapse
 	//for (int i = 0; i < 100; i++)
 	//{
@@ -416,6 +416,8 @@ void display(){
 	glBindVertexArray(window_vao);
 	glUseProgram(windowProgram);
 	glUniform1f(fxRadiusID, fxRadius);
+	glUniform1f(colorErrorID, colorError);
+	glUniform1f(zaTimeID, zaTime);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glutSwapBuffers();
 
@@ -713,10 +715,12 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'r':
 		fxRadius += 0.05f;
+		colorError += 0.1f;
 		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 't':
 		fxRadius -= 0.05f;
+		colorError -= 0.1f;
 		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 'q':
@@ -947,7 +951,8 @@ void initWindowShader()
 
 	//	attribute
 	fxRadiusID = glGetUniformLocation(windowProgram, "fxRadius");
-
+	colorErrorID = glGetUniformLocation(windowProgram, "colorError");
+	zaTimeID = glGetUniformLocation(windowProgram, "time");
 
 	glGenVertexArrays(1, &window_vao);
 	glBindVertexArray(window_vao);

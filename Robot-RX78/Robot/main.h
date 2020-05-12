@@ -55,6 +55,10 @@ TextureData Load_png(const char* path, bool mirroredY);
 //	uniform attribute
 GLint fxRadiusID;
 float fxRadius = 0;
+GLint colorErrorID;
+float colorError = 0;
+GLint zaTimeID;
+float zaTime = 0.0f;
 
 GLuint windowProgram;
 GLuint window_vao, window_vbo;
@@ -159,5 +163,6 @@ mat4 DeformRotation;
 #define rightFoot 3
 #define WALK 1
 #define IDLE 0
+#define PI 3.14159265
 int mode;
 int action = WALK;
