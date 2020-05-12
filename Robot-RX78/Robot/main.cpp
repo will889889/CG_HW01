@@ -42,31 +42,27 @@ int main(int argc, char** argv){
 	glutPassiveMotionFunc(My_Mouse_Moving);
 	glutMotionFunc(My_Mouse_Moving);
 
-	int ActionMenu,ModeMenu,ShaderMenu, InstanceMenu;
-	InstanceMenu = glutCreateMenu(InstanceMenuEvents);//�إߥk����
-	//�[�J�k�䪫��
-	glutAddMenuEntry("1", 0);
-	glutAddMenuEntry("100", 1);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);	//�P�k�����p
+	int ActionMenu,BodyMovementMenu,ExtraMenu;
 
 	ActionMenu = glutCreateMenu(ActionMenuEvents);//�إߥk����
-	//�[�J�k�䪫��
-	glutAddMenuEntry("idle",0);
-	glutAddMenuEntry("walk",1);
+	glutAddMenuEntry("ZA WARUDO", 0);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);	//�P�k�����p
 
-	ModeMenu = glutCreateMenu(ModeMenuEvents);//�إߥk����
-	//�[�J�k�䪫��
-	glutAddMenuEntry("Line",0);
-	glutAddMenuEntry("Fill",1);
+	BodyMovementMenu = glutCreateMenu(BodyMovementMenuEvents);//�إߥk����
+	glutAddMenuEntry("Arms", 0);
+	glutAddMenuEntry("Body", 1);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);	//�P�k�����p
+
+	ExtraMenu = glutCreateMenu(ExtraMenuEvents);
+	glutAddMenuEntry("Toggle Legs",0);
+	glutAddMenuEntry("Switch Skybox",1);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);	//�P�k�����p
 
 
 	glutCreateMenu(menuEvents);//�إߥk����
-	//�[�J�k�䪫��
-	glutAddSubMenu("action",ActionMenu);
-	glutAddSubMenu("mode", ModeMenu);
-	glutAddSubMenu("instance amount",InstanceMenu);
+	glutAddSubMenu("Action",ActionMenu);
+	glutAddSubMenu("Body Movement", BodyMovementMenu);
+	glutAddSubMenu("Extra",ExtraMenu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);	//�P�k�����p
 
 	glutMouseFunc(Mouse);
@@ -114,10 +110,12 @@ void My_Mouse_Moving(int x, int y) {
 	y = y - screenH / 2.0f;
 	float distance = sqrtf(x*x + y * y);
 
-
-	timeSpeed = 1.0f - (distance) / 500.0f;
-	if (timeSpeed < 0)
-		timeSpeed = 0;
+	if (!ZawarudoShowing)
+	{
+		timeSpeed = 1.0f - (distance) / 500.0f;
+		if (timeSpeed < 0)
+			timeSpeed = 0;
+	}
 
 	/*if (distance < 100)
 		timeSpeed = 1.0f;
@@ -134,6 +132,31 @@ void My_Mouse_Moving(int x, int y) {
 //	update	(called per 33ms)
 void idle(int dummy){
 	float deltaTime = 0.033f;
+
+	//	zawarudo	(use real deltatime)
+	if (ZawarudoShowing && ZawarudoShowTime > 0)
+	{
+		ZawarudoShowTime -= deltaTime;
+
+		//	0 ~ 1
+		float process = 1.0f - (ZawarudoShowTime / ZawarudoTotalShowTime);
+
+		float raduisT = DOR(process * 180.0f);
+		float speedT = DOR((process * 90.0f + 90.0f));
+
+		fxRadius = 1.0f * sinf(raduisT);
+		timeSpeed = sinf(speedT);
+		cout << "speedT = " << speedT << "\n";
+
+		if (ZawarudoShowTime <= 0)
+		{
+			timeSpeed = 0;
+			fxRadius = 0;
+			ZawarudoShowing = false;
+		}
+	}
+
+
 	deltaTime *= timeSpeed;
 	fakeTime += deltaTime;
 	zaTime += deltaTime;
@@ -165,7 +188,7 @@ void idle(int dummy){
 }
 void resetObj(){
 	//	reset Arm rotation
-	armRotateAngle = 0;
+	//armRotateAngle = 0;
 
 	//	reset deform rotation
 	//...
@@ -735,39 +758,35 @@ void Keyboard(unsigned char key, int x, int y){
 	}
 	glutPostRedisplay();
 }
+
 void menuEvents(int option){}
-void InstanceMenuEvents(int option) {
+void ActionMenuEvents(int option) {
+	if (ZawarudoShowing == false)
+	{
+		ZawarudoShowTime = ZawarudoTotalShowTime;
+		ZawarudoShowing = true;
+	}
+}
+void BodyMovementMenuEvents(int option) {
 	switch (option) {
-	case 0:
-		instanceAmount = 1;
+	case 0:	//	arms
+		armTimeScale = (armTimeScale == 0) ? 30.0f : 0.0f;
 		break;
-	case 1:
-		instanceAmount = 100;
+	case 1:	//	body
+		bodyTimeScale = (bodyTimeScale == 0) ? 15.0f : 0.0f;
 		break;
 	}
 }
-void ActionMenuEvents(int option){
+
+void ExtraMenuEvents(int option){
 	switch(option){
-	case 0:
-		action = IDLE;
+	case 0:	//	legs
+
 		break;
-	case 1:
-		action = WALK;
-		break;
-	}
-}
-void ModeMenuEvents(int option){
-	switch(option){
-	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		break;
-	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	case 1:	//	skybox
+
 		break;
 	}
-}
-void ShaderMenuEvents(int option){
-	pNo = option;
 }
 
 

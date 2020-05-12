@@ -74,6 +74,11 @@ static const GLfloat window_positions[] =
 };
 void initWindowShader();
 #pragma endregion
+#pragma region uiEvents
+bool ZawarudoShowing = false;
+float ZawarudoShowTime = 0;
+float ZawarudoTotalShowTime = 2.0f;
+#pragma endregion
 
 
 void ChangeSize(int w,int h);
@@ -85,8 +90,8 @@ void My_Mouse_Moving(int x, int y);
 void menuEvents(int option);
 void InstanceMenuEvents(int option);
 void ActionMenuEvents(int option);
-void ModeMenuEvents(int option);
-void ShaderMenuEvents(int option);
+void BodyMovementMenuEvents(int option);
+void ExtraMenuEvents(int option);
 
 void idle(int dummy);
 
