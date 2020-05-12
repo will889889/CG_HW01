@@ -1,22 +1,5 @@
 #include "main.h"
 
-#pragma region Zawarudo Vars
-GLuint          window_vao;
-GLuint			window_buffer;
-GLuint			FBO;
-GLuint			depthRBO;
-GLuint			FBODataTexture;
-int window_width = 1280, window_height = 720;
-
-static const GLfloat window_positions[] =
-{
-	1.0f,-1.0f,1.0f,0.0f,
-	-1.0f,-1.0f,0.0f,0.0f,
-	-1.0f,1.0f,0.0f,1.0f,
-	1.0f,1.0f,1.0f,1.0f
-};
-#pragma endregion
-
 
 vec3 camera = vec3(0,0,30);
 int main(int argc, char** argv){
@@ -27,7 +10,7 @@ int main(int argc, char** argv){
 
 	//multisample for golygons smooth
 	glutInitDisplayMode(GLUT_RGB|GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE);
-	glutInitWindowSize(window_width, window_height);
+	glutInitWindowSize(1280, 720);
 	glutCreateWindow("OpenGL 4.3 - Robot");
 
 	glewExperimental = GL_TRUE; //�m��glewInit()���e
@@ -51,10 +34,6 @@ int main(int argc, char** argv){
 	cout << "initCubemapShader\n";
 	initCubemapShader();
 	///
-
-	// Will- zawarudo initial
-	initZawarudo();
-	cout << "initZawarudo...Done\n";
 
 	init();
 	glutDisplayFunc(display);
