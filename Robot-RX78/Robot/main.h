@@ -51,12 +51,20 @@ void drawCubemapShader();
 TextureData Load_png(const char* path, bool mirroredY);
 #pragma endregion
 
-#pragma region Zawarudo
-
-void initZawarudo();
-void drawZawarudo();
-void reshapeZawarudo(int w, int h);
-
+#pragma region windowShader
+GLuint windowProgram;
+GLuint window_vao, window_vbo;
+GLuint			FBODataTexture;
+GLuint			FBO;
+GLuint			depthRBO;
+static const GLfloat window_positions[] =
+{
+	1.0f,-1.0f,1.0f,0.0f,
+	-1.0f,-1.0f,0.0f,0.0f,
+	-1.0f,1.0f,0.0f,1.0f,
+	1.0f,1.0f,1.0f,1.0f
+};
+void initWindowShader();
 #pragma endregion
 
 

@@ -21,8 +21,8 @@ static const GLfloat window_positions[] =
 vec3 camera = vec3(0,0,30);
 int main(int argc, char** argv){
 	glutInit(&argc, argv);
-	glutInitContextVersion(4,3);//¥HOpenGL version4.3ª©¥»¬°°ò·Ç
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);//¬O§_¦V¤U¬Û®e,GLUT_FORWARD_COMPATIBLE¤£¤ä´©(?
+	glutInitContextVersion(4,3);//ï¿½HOpenGL version4.3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);//ï¿½Oï¿½_ï¿½Vï¿½Uï¿½Û®e,GLUT_FORWARD_COMPATIBLEï¿½ï¿½ï¿½ä´©(?
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	//multisample for golygons smooth
@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 	glutInitWindowSize(window_width, window_height);
 	glutCreateWindow("OpenGL 4.3 - Robot");
 
-	glewExperimental = GL_TRUE; //¸m©óglewInit()¤§«e
+	glewExperimental = GL_TRUE; //ï¿½mï¿½ï¿½glewInit()ï¿½ï¿½ï¿½e
 	if (glewInit()) {
 		std::cerr << "Unable to initialize GLEW ... exiting" << std::endl;//c error
 		exit(EXIT_FAILURE);
@@ -38,14 +38,15 @@ int main(int argc, char** argv){
 
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LESS);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	///glCullFace(GL_BACK);
+	///glEnable(GL_CULL_FACE);
+
 
 	///	init cubemap shader
 	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	///glEnable(GL_TEXTURE_2D);
+	///glEnable(GL_BLEND);
+	///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	///	cubemap shader
 	cout << "initCubemapShader\n";
 	initCubemapShader();
@@ -63,31 +64,31 @@ int main(int argc, char** argv){
 	glutMotionFunc(My_Mouse_Moving);
 
 	int ActionMenu,ModeMenu,ShaderMenu, InstanceMenu;
-	InstanceMenu = glutCreateMenu(InstanceMenuEvents);//«Ø¥ß¥kÁäµæ³æ
-	//¥[¤J¥kÁäª«¥ó
+	InstanceMenu = glutCreateMenu(InstanceMenuEvents);//ï¿½Ø¥ß¥kï¿½ï¿½ï¿½ï¿½
+	//ï¿½[ï¿½Jï¿½kï¿½äª«ï¿½ï¿½
 	glutAddMenuEntry("1", 0);
 	glutAddMenuEntry("100", 1);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);	//»P¥kÁäÃöÁp
+	glutAttachMenu(GLUT_RIGHT_BUTTON);	//ï¿½Pï¿½kï¿½ï¿½ï¿½ï¿½ï¿½p
 
-	ActionMenu = glutCreateMenu(ActionMenuEvents);//«Ø¥ß¥kÁäµæ³æ
-	//¥[¤J¥kÁäª«¥ó
+	ActionMenu = glutCreateMenu(ActionMenuEvents);//ï¿½Ø¥ß¥kï¿½ï¿½ï¿½ï¿½
+	//ï¿½[ï¿½Jï¿½kï¿½äª«ï¿½ï¿½
 	glutAddMenuEntry("idle",0);
 	glutAddMenuEntry("walk",1);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);	//»P¥kÁäÃöÁp
+	glutAttachMenu(GLUT_RIGHT_BUTTON);	//ï¿½Pï¿½kï¿½ï¿½ï¿½ï¿½ï¿½p
 
-	ModeMenu = glutCreateMenu(ModeMenuEvents);//«Ø¥ß¥kÁäµæ³æ
-	//¥[¤J¥kÁäª«¥ó
+	ModeMenu = glutCreateMenu(ModeMenuEvents);//ï¿½Ø¥ß¥kï¿½ï¿½ï¿½ï¿½
+	//ï¿½[ï¿½Jï¿½kï¿½äª«ï¿½ï¿½
 	glutAddMenuEntry("Line",0);
 	glutAddMenuEntry("Fill",1);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);	//»P¥kÁäÃöÁp
+	glutAttachMenu(GLUT_RIGHT_BUTTON);	//ï¿½Pï¿½kï¿½ï¿½ï¿½ï¿½ï¿½p
 
 
-	glutCreateMenu(menuEvents);//«Ø¥ß¥kÁäµæ³æ
-	//¥[¤J¥kÁäª«¥ó
+	glutCreateMenu(menuEvents);//ï¿½Ø¥ß¥kï¿½ï¿½ï¿½ï¿½
+	//ï¿½[ï¿½Jï¿½kï¿½äª«ï¿½ï¿½
 	glutAddSubMenu("action",ActionMenu);
 	glutAddSubMenu("mode", ModeMenu);
 	glutAddSubMenu("instance amount",InstanceMenu);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);	//»P¥kÁäÃöÁp
+	glutAttachMenu(GLUT_RIGHT_BUTTON);	//ï¿½Pï¿½kï¿½ï¿½ï¿½ï¿½ï¿½p
 
 	glutMouseFunc(Mouse);
 	glutTimerFunc (33, idle, 0); 
@@ -102,7 +103,29 @@ void ChangeSize(int w,int h){
 	screenW = w;
 	screenH = h;
 	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
-	reshapeZawarudo(w, h);
+
+#pragma region windowShader - fbo & texture?
+	glDeleteRenderbuffers(1, &depthRBO);
+	glDeleteTextures(1, &FBODataTexture);
+	glGenRenderbuffers(1, &depthRBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
+
+	glGenTextures(1, &FBODataTexture);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
+#pragma endregion
+
+
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
@@ -196,7 +219,7 @@ void init(){
 
 	isFrame = false;
 	pNo = 0;
-	for(int i = 0;i<PARTSNUM;i++)//ªì©l¤Æ¨¤«×°}¦C
+	for(int i = 0;i<PARTSNUM;i++)//ï¿½ï¿½lï¿½Æ¨ï¿½ï¿½×°}ï¿½C
 		angles[i] = 0.0;
 
 	//VAO
@@ -207,9 +230,9 @@ void init(){
 		{ GL_VERTEX_SHADER, "DSPhong_Material.vp" },//vertex shader
 		{ GL_FRAGMENT_SHADER, "DSPhong_Material.fp" },//fragment shader
 		{ GL_NONE, NULL }};
-	program = LoadShaders(shaders);//Åª¨úshader
+	program = LoadShaders(shaders);//Åªï¿½ï¿½shader
 
-	glUseProgram(program);//uniform°Ñ¼Æ¼Æ­È«e¥²¶·¥ýuse shader
+	glUseProgram(program);//uniformï¿½Ñ¼Æ¼Æ­È«eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½use shader
 	
 	MatricesIdx = glGetUniformBlockIndex(program,"MatVP");
 	ModelID =  glGetUniformLocation(program,"Model");
@@ -279,16 +302,26 @@ void init(){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 100, &instanceOffsetY[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glClearColor(0.0, 0.0, 0.0, 1);//black screen
+	///	windowShader
+	initWindowShader();
+
+	glClearColor(0.0,0.0,0.0,1);//black screen
 }
 
 void display(){
 
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	///
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	///
+	static const GLfloat green[] = { 0.0f, 0.25f, 0.0f, 1.0f };
+	static const GLfloat one = 1.0f;
+	glClearBufferfv(GL_COLOR, 0, green);
+	glClearBufferfv(GL_DEPTH, 0, &one);
+
 
 	float eyey = DOR(eyeAngley);
 	View = lookAt(
@@ -301,7 +334,7 @@ void display(){
 	drawCubemapShader();
 
 	glBindVertexArray(VAO);
-	glUseProgram(program);//uniform°Ñ¼Æ¼Æ­È«e¥²¶·¥ýuse shader
+	glUseProgram(program);//uniformï¿½Ñ¼Æ¼Æ­È«eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½use shader
 	
 	updateModels();
 
@@ -325,7 +358,7 @@ void display(){
 							  GL_FALSE,			//not normalized
 							  0,				//strip
 							  (void*)offset[0]);//buffer offset
-		//(location,vec3,type,©T©wÂI,³sÄòÂIªº°¾²¾¶q,buffer point)
+		//(location,vec3,type,ï¿½Tï¿½wï¿½I,ï¿½sï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½q,buffer point)
 		offset[0] +=  vertices_size[i]*sizeof(vec3);
 
 		// 2nd attribute buffer : UVs
@@ -337,7 +370,7 @@ void display(){
 							  GL_FALSE, 
 							  0,
 							  (void*)offset[1]);
-		//(location,vec2,type,©T©wÂI,³sÄòÂIªº°¾²¾¶q,point)
+		//(location,vec2,type,ï¿½Tï¿½wï¿½I,ï¿½sï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½q,point)
 		offset[1] +=  uvs_size[i]*sizeof(vec2);
 
 		// 3rd attribute buffer : normals
@@ -349,7 +382,7 @@ void display(){
 							  GL_FALSE, 
 							  0,
 							  (void*)offset[2]);
-		//(location,vec3,type,©T©wÂI,³sÄòÂIªº°¾²¾¶q,point)
+		//(location,vec3,type,ï¿½Tï¿½wï¿½I,ï¿½sï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½q,point)
 		offset[2] +=  normals_size[i]*sizeof(vec3);
 
 		//	4th attribute buffer : instance offset
@@ -392,12 +425,22 @@ void display(){
 		}//end for loop for draw one part of the robot	
 		
 	}//end for loop for updating and drawing model
-	
-	glFlush();//±j¨î°õ¦æ¤W¦¸ªºOpenGL commands
-	glutSwapBuffers();//½Õ´««e¥x©M«á¥xbuffer ,·í«á»Obufferµe§¹©M«e¥xbuffer¥æ´«¨Ï§Ú­Ì¬Ý¨£¥¦
 
-	// Will - draw Zawarudo
-	drawZawarudo();
+	///
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+	glBindVertexArray(window_vao);
+	glUseProgram(windowProgram);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glutSwapBuffers();
+
+	///glFlush();//ï¿½jï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½OpenGL commands
+	///glutSwapBuffers();//ï¿½Õ´ï¿½ï¿½eï¿½xï¿½Mï¿½ï¿½xbuffer ,ï¿½ï¿½ï¿½ï¿½Obufferï¿½eï¿½ï¿½ï¿½Mï¿½eï¿½xbufferï¿½æ´«ï¿½Ï§Ú­Ì¬Ý¨ï¿½ï¿½ï¿½
 }
 
 void Obj2Buffer(){
@@ -438,14 +481,14 @@ void Obj2Buffer(){
 	glGenBuffers(1,&VBO);
 	glGenBuffers(1,&uVBO);
 	glGenBuffers(1,&nVBO);
-	//bind vbo ,²Ä¤@¦¸bind¤]¦Pµ¥©ó create vbo 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);//VBOªºtarget¬OGL_ARRAY_BUFFER
+	//bind vbo ,ï¿½Ä¤@ï¿½ï¿½bindï¿½]ï¿½Pï¿½ï¿½ï¿½ï¿½ create vbo 
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);//VBOï¿½ï¿½targetï¿½OGL_ARRAY_BUFFER
 	glBufferData(GL_ARRAY_BUFFER,totalSize[0],NULL,GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, uVBO);//VBOªºtarget¬OGL_ARRAY_BUFFER
+	glBindBuffer(GL_ARRAY_BUFFER, uVBO);//VBOï¿½ï¿½targetï¿½OGL_ARRAY_BUFFER
 	glBufferData(GL_ARRAY_BUFFER,totalSize[1],NULL,GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, nVBO);//VBOªºtarget¬OGL_ARRAY_BUFFER
+	glBindBuffer(GL_ARRAY_BUFFER, nVBO);//VBOï¿½ï¿½targetï¿½OGL_ARRAY_BUFFER
 	glBufferData(GL_ARRAY_BUFFER,totalSize[2],NULL,GL_STATIC_DRAW);
 	
 	
@@ -557,31 +600,31 @@ void updateModels(){
 	Rotatation[0] = rotate(beta, 0, 1, 0);
 	Translation[0] = translate(0, 2.9 + 0, 0);
 	Models[0] = Translation[0] * Rotatation[0];
-	//¥ª¤â=======================================================
-	//¥ª¤W¤âÁu
+	//ï¿½ï¿½ï¿½ï¿½=======================================================
+	//ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½u
 	yaw = DOR(beta);r = 3.7;
 	alpha = angles[1];
 	gamma = 10;
-	Rotatation[1] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);//¦V«e±ÛÂà*¦V¥k±ÛÂà
+	Rotatation[1] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);//ï¿½Vï¿½eï¿½ï¿½ï¿½ï¿½*ï¿½Vï¿½kï¿½ï¿½ï¿½ï¿½
 	Translation[1] = translate(3.7,1,-0.5);
 
 	Models[1] = Models[0]*Translation[1]*Rotatation[1];
 	
-	//¥ªªÓ»H
-	Rotatation[4] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);//¦V«e±ÛÂà*¦V¥k±ÛÂà
-	Translation[4] =translate(3.7,1,-0.5);//¦ì²¾¨ì¥ª¤W¤âÁu³B
+	//ï¿½ï¿½ï¿½Ó»H
+	Rotatation[4] = rotate(alpha,1,0,0)*rotate(gamma,0,0,1);//ï¿½Vï¿½eï¿½ï¿½ï¿½ï¿½*ï¿½Vï¿½kï¿½ï¿½ï¿½ï¿½
+	Translation[4] =translate(3.7,1,-0.5);//ï¿½ì²¾ï¿½ì¥ªï¿½Wï¿½ï¿½ï¿½uï¿½B
 	Models[4] =Models[0]*Translation[1]*Rotatation[1];
 	
-	//¥ª¤U¤âÁu
+	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½u
 	pitch = DOR(alpha);r = 3;
 	roll = DOR(gamma);
 	static int i=0;
 	i+=5;
 	alpha = angles[2]-20;
-	//¤W¤âÁu+¤U¤âÁu¦V«e±ÛÂà*¦V¥k±ÛÂà
+	//ï¿½Wï¿½ï¿½ï¿½u+ï¿½Uï¿½ï¿½ï¿½uï¿½Vï¿½eï¿½ï¿½ï¿½ï¿½*ï¿½Vï¿½kï¿½ï¿½ï¿½ï¿½
 	Rotatation[2] = rotate(alpha,1,0,0);
-	//©µx¶b¦ì²¾¥H¤W¤âÁu¬°¥b®|ªº¶ê©Pªø:translate(0,r*cos,r*sin)
-	//©µz¶b¦ì²¾¥H¤W¤âÁu¬°¥b®|¨¤«×:translate(r*sin,-rcos,0)
+	//ï¿½ï¿½xï¿½bï¿½ì²¾ï¿½Hï¿½Wï¿½ï¿½ï¿½uï¿½ï¿½ï¿½bï¿½|ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½:translate(0,r*cos,r*sin)
+	//ï¿½ï¿½zï¿½bï¿½ì²¾ï¿½Hï¿½Wï¿½ï¿½ï¿½uï¿½ï¿½ï¿½bï¿½|ï¿½ï¿½ï¿½ï¿½:translate(r*sin,-rcos,0)
 	Translation[2] = translate(0,-3,0);
 
 	Models[2] = Models[1]*Translation[2]*Rotatation[2];
@@ -590,9 +633,9 @@ void updateModels(){
 	pitch = DOR(alpha);
 	//b = DOR(angles[2]);
 	roll = DOR(gamma);
-	//¤â´x¨¤«×»P¤U¤âÁu¬Û¦P
+	//ï¿½ï¿½xï¿½ï¿½ï¿½×»Pï¿½Uï¿½ï¿½ï¿½uï¿½Û¦P
 	//Rotatation[3] = Rotatation[2];
-	//©µx¶b¦ì²¾¥H¤W¤âÁu¬°¥b®|ªº¶ê©Pªø:translate(0,r*cos,r*sin) ,¨¤«×¬°¤W¤âÁu+¤U¤âÁu
+	//ï¿½ï¿½xï¿½bï¿½ì²¾ï¿½Hï¿½Wï¿½ï¿½ï¿½uï¿½ï¿½ï¿½bï¿½|ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½:translate(0,r*cos,r*sin) ,ï¿½ï¿½ï¿½×¬ï¿½ï¿½Wï¿½ï¿½ï¿½u+ï¿½Uï¿½ï¿½ï¿½u
 	Translation[3] = translate(0,-4.8,0);
 	Models[3] = Models[2]*Translation[3]*Rotatation[3];
 	//=============================================================
@@ -614,7 +657,7 @@ void load2Buffer(char* obj,int i){
 	glBufferData(GL_ARRAY_BUFFER,vertices.size()*sizeof(vec3),&vertices[0],GL_STATIC_DRAW);
 	vertices_size[i] = vertices.size();
 
-	//(buffer type,data°_©l¦ì¸m,data size,data first ptr)
+	//(buffer type,dataï¿½_ï¿½lï¿½ï¿½m,data size,data first ptr)
 	//vertices_size[i] = glm_model->numtriangles;
 	
 	//printf("vertices:%d\n",vertices_size[);
@@ -630,7 +673,7 @@ void load2Buffer(char* obj,int i){
 	normals_size[i] = normals.size();
 }
 mat4 translate(float x,float y,float z){
-	vec4 t = vec4(x,y,z,1);//w = 1 ,«hx,y,z=0®É¤]¯àtranslate
+	vec4 t = vec4(x,y,z,1);//w = 1 ,ï¿½hx,y,z=0ï¿½É¤]ï¿½ï¿½translate
 	vec4 c1 = vec4(1,0,0,0);
 	vec4 c2 = vec4(0,1,0,0);
 	vec4 c3 = vec4(0,0,1,0);
@@ -758,9 +801,9 @@ void initCubemapShader()
 		{ GL_VERTEX_SHADER, "cubemap.vs.glsl" },//vertex shader
 		{ GL_FRAGMENT_SHADER, "cubemap.fs.glsl" },//fragment shader
 		{ GL_NONE, NULL } };
-	cubemapProgram = LoadShaders(shaders);//Åª¨úshader
+	cubemapProgram = LoadShaders(shaders);//Åªï¿½ï¿½shader
 
-	glUseProgram(cubemapProgram);//uniform°Ñ¼Æ¼Æ­È«e¥²¶·¥ýuse shader
+	glUseProgram(cubemapProgram);//uniformï¿½Ñ¼Æ¼Æ­È«eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½use shader
 
 	cubemapUm4mvLocation = glGetUniformLocation(cubemapProgram, "um4mv");
 	cubemapUm4pLocation = glGetUniformLocation(cubemapProgram, "um4p");
@@ -911,28 +954,23 @@ TextureData Load_png(const char* path, bool mirroredY)
 }
 
 #pragma endregion
-
-#pragma region Zawarudo
-
-
-void initZawarudo()
+void initWindowShader()
 {
-	///////////////////////////	
-	//Initialize shader2
-	///////////////////////////	
-	ShaderInfo shaders_zawarudo[] = {
-		{ GL_VERTEX_SHADER, "Zawarudo_Effect.vp" },//vertex shader
-		{ GL_FRAGMENT_SHADER, "Zawarudo_Effect.fp" },//fragment shader
+	//	create program
+	ShaderInfo shaders[] = {
+		{ GL_VERTEX_SHADER, "gray.vs.glsl" },//vertex shader
+		{ GL_FRAGMENT_SHADER, "gray.fs.glsl" },//fragment shader
 		{ GL_NONE, NULL } };
-	program_zawarudo = LoadShaders(shaders_zawarudo);//Åª¨úshader
+	windowProgram = LoadShaders(shaders);//Åªï¿½ï¿½shader
 
-	glUseProgram(program_zawarudo);//uniform°Ñ¼Æ¼Æ­È«e¥²¶·¥ýuse shader
+	glUseProgram(windowProgram);//uniformï¿½Ñ¼Æ¼Æ­È«eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½use shader
+
 
 	glGenVertexArrays(1, &window_vao);
 	glBindVertexArray(window_vao);
 
-	glGenBuffers(1, &window_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, window_buffer);
+	glGenBuffers(1, &window_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, window_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(window_positions), window_positions, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, 0);
@@ -942,60 +980,4 @@ void initZawarudo()
 	glEnableVertexAttribArray(1);
 
 	glGenFramebuffers(1, &FBO);
-	glGenRenderbuffers(1, &depthRBO); //Create Depth RBO
-	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, window_width,
-		window_height);
-	glGenTextures(1, &FBODataTexture); //Create fobDataTexture
-	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window_width, window_height, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
-	//Set depthrbo to current fbo
-	glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
-	//Set buffertexture to current fbo
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
 }
-void drawZawarudo()
-{
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
-	glBindVertexArray(window_vao);
-	glUseProgram(program_zawarudo);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-	glutSwapBuffers();
-}
-void reshapeZawarudo(int w, int h)
-{
-	// Will - For framebuffer of Zawarudo
-	glDeleteRenderbuffers(1, &depthRBO);
-	glDeleteTextures(1, &FBODataTexture);
-	glGenRenderbuffers(1, &depthRBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
-
-	glGenTextures(1, &FBODataTexture);
-	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
-}
-#pragma endregion
-
