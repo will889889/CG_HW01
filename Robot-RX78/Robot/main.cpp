@@ -708,11 +708,11 @@ void Keyboard(unsigned char key, int x, int y){
 		eyeAngley +=10;
 		break;
 	case 'r':
-		fxRadius += 0.1f;
+		fxRadius += 0.05f;
 		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 't':
-		fxRadius -= 0.1f;
+		fxRadius -= 0.05f;
 		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 'q':
