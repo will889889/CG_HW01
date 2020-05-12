@@ -87,6 +87,7 @@ GLuint VBOs[PARTSNUM];
 GLuint uVBOs[PARTSNUM];
 GLuint nVBOs[PARTSNUM];
 GLuint program;
+GLuint program_zawarudo;
 GLuint InstanceVBO;
 GLuint InstanceVBOY;
 glm::vec3 instanceOffset[100];

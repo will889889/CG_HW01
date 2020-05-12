@@ -1,5 +1,19 @@
 #include "main.h"
 
+GLuint          window_vao;
+GLuint			window_buffer;
+GLuint			FBO;
+GLuint			depthRBO;
+GLuint			FBODataTexture;
+
+static const GLfloat window_positions[] =
+{
+	1.0f,-1.0f,1.0f,0.0f,
+	-1.0f,-1.0f,0.0f,0.0f,
+	-1.0f,1.0f,0.0f,1.0f,
+	1.0f,1.0f,1.0f,1.0f
+};
+
 vec3 camera = vec3(0,0,30);
 int main(int argc, char** argv){
 	glutInit(&argc, argv);
@@ -83,6 +97,26 @@ void ChangeSize(int w,int h){
 	screenW = w;
 	screenH = h;
 	Projection = perspective(80.0f,(float)w/h,0.1f,1000.0f);
+
+	// Will - For framebuffer of Zawarudo
+	glDeleteRenderbuffers(1, &depthRBO);
+	glDeleteTextures(1, &FBODataTexture);
+	glGenRenderbuffers(1, &depthRBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
+
+	glGenTextures(1, &FBODataTexture);
+	glBindTexture(GL_TEXTURE_2D, FBODataTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, FBODataTexture, 0);
 }
 void Mouse(int button,int state,int x,int y){
 	if(button == 2) isFrame = false;
@@ -260,8 +294,32 @@ void init(){
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 100, &instanceOffsetY[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	glClearColor(0.0, 0.0, 0.0, 1);//black screen
 
-	glClearColor(0.0,0.0,0.0,1);//black screen
+	///////////////////////////	
+	//Initialize shader2
+	///////////////////////////	
+	//ShaderInfo shaders_zawarudo[] = {
+	//	{ GL_VERTEX_SHADER, "Zawarudo_Effect.vp" },//vertex shader
+	//	{ GL_FRAGMENT_SHADER, "Zawarudo_Effect.fp" },//fragment shader
+	//	{ GL_NONE, NULL } };
+	//program_zawarudo = LoadShaders(shaders_zawarudo);//Åª¨úshader
+
+	//glGenVertexArrays(1, &window_vao);
+	//glBindVertexArray(window_vao);
+
+	//glGenBuffers(1, &window_buffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, window_buffer);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(window_positions), window_positions, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, 0);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 4, (const GLvoid*)(sizeof(GL_FLOAT) * 2));
+
+	//glEnableVertexAttribArray(0);
+	//glEnableVertexAttribArray(1);
+
+	//glGenFramebuffers(1, &FBO);
 }
 
 void display(){

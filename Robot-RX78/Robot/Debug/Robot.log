@@ -1,26 +1,26 @@
 ﻿  main.cpp
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.h(40): warning C4091: 'typedef ': 當沒有宣告變數時，忽略 'CubemapTexture' 的左方
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(46): warning C4101: 'ShaderMenu': 未參考的區域變數
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(83): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(84): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(91): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(92): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(93): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(276): warning C4244: '正在初始化': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(357): warning C4018: '<': signed/unsigned 不相符
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(385): warning C4018: '<': signed/unsigned 不相符
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(529): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(533): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(533): warning C4305: '=': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(537): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(543): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(547): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(548): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(561): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(563): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(567): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(620): warning C4244: '正在初始化': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(807): warning C4018: '<': signed/unsigned 不相符
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(865): warning C4018: '<': signed/unsigned 不相符
-c:\ian\githubs\cg_hw01\robot-rx78\robot\main.cpp(867): warning C4018: '<': signed/unsigned 不相符
-  Robot.vcxproj -> C:\ian\Githubs\CG_HW01\Robot-RX78\Robot\Debug\Robot.exe
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.h(40): warning C4091: 'typedef ': 當沒有宣告變數時，忽略 'CubemapTexture' 的左方
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(60): warning C4101: 'ShaderMenu': 未參考的區域變數
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(97): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(98): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(125): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(126): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(127): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(334): warning C4244: '正在初始化': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(415): warning C4018: '<': signed/unsigned 不相符
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(443): warning C4018: '<': signed/unsigned 不相符
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(587): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(591): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(591): warning C4305: '=': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(595): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(601): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(605): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(606): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(619): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(621): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(625): warning C4305: '引數': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(678): warning C4244: '正在初始化': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(865): warning C4018: '<': signed/unsigned 不相符
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(923): warning C4018: '<': signed/unsigned 不相符
+d:\work(will)\school\fundamentals of computer graphics\projects\cg_hw01\robot-rx78\robot\main.cpp(925): warning C4018: '<': signed/unsigned 不相符
+  Robot.vcxproj -> D:\Work(Will)\School\Fundamentals of Computer Graphics\Projects\CG_HW01\Robot-RX78\Robot\Debug\Robot.exe
