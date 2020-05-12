@@ -200,6 +200,7 @@ float armTime = 0;
 float armTimeScale = 30.0f;
 float bodyTime = 0;
 float bodyTimeScale = 0.0f;
+float bodyRotateAngle = 0.5f;
 void updateObj(float deltaTime){
 	//	Arm rotation
 	armTime += deltaTime;
@@ -209,7 +210,7 @@ void updateObj(float deltaTime){
 	bodyTime += deltaTime;
 	// float rotateAngle = 1.0f * (1.0f - abs(cos(bodyTime * bodyTimeScale)));
 	// rotateAngle = rotateAngle < 0.2f ? 0.2f : rotateAngle;
-	bodyRotateMatrix = rotate(0.5f, cos(bodyTime * bodyTimeScale), 0, sin(bodyTime * bodyTimeScale));
+	bodyRotateMatrix = rotate(bodyRotateAngle, -cos(bodyTime * bodyTimeScale), 0, -sin(bodyTime * bodyTimeScale));
 }
 
 
@@ -766,13 +767,12 @@ void Keyboard(unsigned char key, int x, int y){
 		cout << "fxRadius = " + std::to_string(fxRadius) << "\n";
 		break;
 	case 'q':
-		positionY += 1.0f;
+		bodyRotateAngle += 0.1f;
+		cout << "bodyRotateAngle = " + std::to_string(bodyRotateAngle) << "\n";
 		break;
 	case 'e':
-		positionY -= 1.0f;
-		cout << "positionY = " + std::to_string(positionY);
-
-
+		bodyRotateAngle -= 0.1f;
+		cout << "bodyRotateAngle = " + std::to_string(bodyRotateAngle) << "\n";
 		break;
 	}
 	glutPostRedisplay();
